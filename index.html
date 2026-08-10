@@ -1,0 +1,348 @@
+<title>NTTドコモ 露出分析レポート</title>
+<style>
+  :root{
+    --bg:#F6F5F2;
+    --surface:#FFFFFF;
+    --surface-2:#EFEDE8;
+    --text:#201E1B;
+    --muted:#726D65;
+    --line:#E1DDD4;
+    --accent:#C7102A;
+    --accent-soft:#F6DADD;
+    --positive:#1F7A5C;
+    --positive-soft:#DCEFE6;
+    --neutral-tone:#9C978E;
+    --neutral-soft:#EEECE7;
+    --negative:#C7102A;
+    --negative-soft:#F8DDE0;
+    --shadow: 0 1px 2px rgba(32,30,27,0.06), 0 8px 24px rgba(32,30,27,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171614;
+      --surface:#1F1E1B;
+      --surface-2:#272521;
+      --text:#EDEAE4;
+      --muted:#A39D93;
+      --line:#38352F;
+      --accent:#FF6B7F;
+      --accent-soft:#3A2126;
+      --positive:#57C69B;
+      --positive-soft:#1B3129;
+      --neutral-tone:#8B867C;
+      --neutral-soft:#2A2824;
+      --negative:#FF6B7F;
+      --negative-soft:#3A1F23;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171614; --surface:#1F1E1B; --surface-2:#272521; --text:#EDEAE4; --muted:#A39D93;
+    --line:#38352F; --accent:#FF6B7F; --accent-soft:#3A2126; --positive:#57C69B; --positive-soft:#1B3129;
+    --neutral-tone:#8B867C; --neutral-soft:#2A2824; --negative:#FF6B7F; --negative-soft:#3A1F23;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#F6F5F2; --surface:#FFFFFF; --surface-2:#EFEDE8; --text:#201E1B; --muted:#726D65;
+    --line:#E1DDD4; --accent:#C7102A; --accent-soft:#F6DADD; --positive:#1F7A5C; --positive-soft:#DCEFE6;
+    --neutral-tone:#9C978E; --neutral-soft:#EEECE7; --negative:#C7102A; --negative-soft:#F8DDE0;
+    --shadow: 0 1px 2px rgba(32,30,27,0.06), 0 8px 24px rgba(32,30,27,0.05);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;}
+
+  header.hero{
+    display:flex;flex-direction:column;gap:6px;
+    padding-bottom:28px;margin-bottom:28px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:0.12em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;
+  }
+  h1{
+    font-size:30px;margin:2px 0 4px;font-weight:800;letter-spacing:-0.01em;
+    text-wrap:balance;
+  }
+  .period{color:var(--muted);font-size:14px;}
+
+  .kpi-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;
+  }
+  .kpi{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:18px 18px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .kpi .label{font-size:12px;color:var(--muted);letter-spacing:0.04em;}
+  .kpi .value{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.01em;}
+  .kpi .sub{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .kpi.pos .value{color:var(--positive);}
+  .kpi.neg .value{color:var(--negative);}
+
+  section{margin-bottom:32px;}
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:22px 24px;box-shadow:var(--shadow);
+  }
+  .card h2{
+    font-size:16px;margin:0 0 2px;font-weight:800;
+  }
+  .card .desc{font-size:13px;color:var(--muted);margin:0 0 16px;}
+
+  .two-col{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:stretch;}
+  @media (max-width:860px){ .two-col{grid-template-columns:1fr;} .kpi-row{grid-template-columns:repeat(2,1fr);} }
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:2px;display:inline-block;}
+
+  .scrollx{overflow-x:auto;}
+  svg text{fill:var(--text);font-family:inherit;}
+  .axis-label{fill:var(--muted);font-size:11px;}
+  .bar-total-label{fill:var(--muted);font-size:10px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{
+    text-align:left;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;
+    color:var(--muted);border-bottom:1px solid var(--line);padding:8px 10px;position:sticky;top:0;background:var(--surface);
+  }
+  tbody td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tbody tr:hover{background:var(--surface-2);}
+  .col-date{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums;width:92px;}
+  .col-media{white-space:nowrap;width:180px;color:var(--muted);}
+  .scrolly{max-height:420px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;}
+  .scrolly table thead th{background:var(--surface-2);}
+
+  .media-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:12.5px;}
+  .media-bar-name{width:150px;flex:0 0 150px;color:var(--text);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+  .media-bar-track{flex:1;background:var(--surface-2);border-radius:4px;height:14px;overflow:hidden;}
+  .media-bar-fill{height:100%;background:var(--accent);border-radius:4px;}
+  .media-bar-val{width:44px;flex:0 0 44px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  .caveat{
+    display:flex;gap:10px;align-items:flex-start;background:var(--neutral-soft);
+    border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:12.5px;color:var(--muted);
+    margin-top:14px;
+  }
+  .caveat b{color:var(--text);}
+
+  footer{color:var(--muted);font-size:12px;margin-top:36px;padding-top:16px;border-top:1px solid var(--line);}
+
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Media Exposure Report</div>
+    <h1>NTTドコモ 露出分析レポート</h1>
+    <div class="period" id="periodLabel">過去1年間の掲載記事データを集計・分析</div>
+  </header>
+
+  <section class="kpi-row" id="kpiRow"></section>
+
+  <section class="card">
+    <h2>月別 掲載件数の推移（センチメント内訳）</h2>
+    <p class="desc">月ごとの総露出件数を、見出し内キーワードによる自動分類（ポジティブ／ニュートラル／ネガティブ）で積み上げ表示</p>
+    <div class="scrollx"><svg id="monthlyChart"></svg></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--positive)"></span>ポジティブ</span>
+      <span><span class="dot" style="background:var(--neutral-tone)"></span>ニュートラル</span>
+      <span><span class="dot" style="background:var(--negative)"></span>ネガティブ</span>
+    </div>
+  </section>
+
+  <section class="two-col">
+    <div class="card">
+      <h2>媒体別 掲載件数 TOP15</h2>
+      <p class="desc">全4,079件中、上位15媒体の件数</p>
+      <div id="mediaBars"></div>
+    </div>
+    <div class="card">
+      <h2>媒体タイプ構成</h2>
+      <p class="desc">媒体名から自動分類した構成比</p>
+      <div style="display:flex;justify-content:center;"><svg id="donutChart" width="220" height="220"></svg></div>
+      <div class="legend" id="donutLegend"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>センチメント分類の全体比率</h2>
+    <p class="desc">全期間合計。見出し内の登場キーワードに基づく自動判定（本文は未参照）</p>
+    <div class="scrollx"><svg id="sentBar" height="64"></svg></div>
+    <div class="caveat">
+      <span>&#9888;</span>
+      <div><b>分析手法について：</b>この分類は見出しに含まれるキーワード（「値上げ」「障害」「下方修正」等＝ネガ、「発表」「受賞」「提携」等＝ポジ）による機械的な一次判定です。本文は参照していないため、皮肉・引用・第三者言及や、文脈上ポジティブな記事（例：「詐欺対策」を発表するニュース）が誤ってネガ判定される場合があります。件数の大局的な傾向把握には有効ですが、個別記事の評価・打ち手検討には下記リストの目視確認を推奨します。</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ネガティブ判定 記事一覧（全<span id="negCount"></span>件）</h2>
+    <p class="desc">直近日付順。主な傾向：通信障害（熊本地震・台風・岩手山林火災等）、料金値上げ報道、業績下方修正・減益、ドコモ・バイクシェア障害</p>
+    <div class="scrolly"><table id="negTable"><thead><tr><th class="col-date">日付</th><th class="col-media">媒体名</th><th>タイトル</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <footer>
+    データ出典: NTTドコモ過去1年間露出.csv（日付・媒体名・タイトルの3列、n=<span id="footTotal"></span>）／ 媒体タイプおよびセンチメントは見出しテキストに基づく自動分類。
+  </footer>
+</div>
+
+<script>
+const DATA = {"total": 4079, "months": ["2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"], "monthly_counts": {"2025-08": 157, "2025-09": 297, "2025-10": 385, "2025-11": 323, "2025-12": 365, "2026-01": 274, "2026-02": 341, "2026-03": 406, "2026-04": 354, "2026-05": 334, "2026-06": 353, "2026-07": 359, "2026-08": 131}, "monthly_sent": {"2025-08": {"positive": 33, "neutral": 113, "negative": 11}, "2025-09": {"positive": 60, "neutral": 203, "negative": 34}, "2025-10": {"positive": 86, "neutral": 265, "negative": 34}, "2025-11": {"positive": 65, "neutral": 227, "negative": 31}, "2025-12": {"positive": 75, "neutral": 265, "negative": 25}, "2026-01": {"positive": 57, "neutral": 203, "negative": 14}, "2026-02": {"positive": 72, "neutral": 235, "negative": 34}, "2026-03": {"positive": 84, "neutral": 291, "negative": 31}, "2026-04": {"positive": 67, "neutral": 236, "negative": 51}, "2026-05": {"positive": 73, "neutral": 206, "negative": 55}, "2026-06": {"positive": 92, "neutral": 233, "negative": 28}, "2026-07": {"positive": 74, "neutral": 233, "negative": 52}, "2026-08": {"positive": 32, "neutral": 79, "negative": 20}}, "media_type_counts": {"Web/IT専門": 1908, "Webメディア（その他）": 796, "新聞": 1348, "TV/ラジオ": 27}, "top_media": [["日本経済新聞電子版", 679], ["ITmedia Mobile", 662], ["ケータイ Watch", 620], ["business network．jp", 211], ["日経クロステック", 162], ["東京読売新聞 朝刊", 121], ["CNET Japan", 121], ["時事通信ニュース", 115], ["マイナビニュース", 106], ["ITmedia NEWS", 92], ["朝日新聞 朝刊", 92], ["東洋経済オンライン", 84], ["INTERNET Watch", 74], ["クラウド Watch", 71], ["ITmedia エンタープライズ", 60]], "sentiment_counts": {"neutral": 2789, "positive": 870, "negative": 420}, "neg_items": [{"date": "2026/08/08", "media": "ITmedia Mobile", "title": "ahamoの「40GB化」は値上げの布石か？ 通信品質改善と料金設定で揺れるドコモの戦略"}, {"date": "2026/08/07", "media": "日経クロステック", "title": "【AIインフラ最前線】サイバー攻撃で狙われやすいIoT、フィジカルAIでは人命の危機にも直結"}, {"date": "2026/08/07", "media": "東京読売新聞 朝刊", "title": "自転車シェア システム障害 「ドコモ・バイクシェア」"}, {"date": "2026/08/07", "media": "大阪読売新聞 朝刊", "title": "自転車シェア サービス停止 ドコモ子会社障害で"}, {"date": "2026/08/07", "media": "ITmedia NEWS", "title": "ドコモ・バイクシェアのシステム障害、いまだ全面復旧ならず 8月1日以降の利用者には「全額返金」へ"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "沖縄・鹿児島などで「JAPANローミング」提供 台風13号で通信障害"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "ドコモ、九州・沖縄の一部で障害 台風13号の影響により"}, {"date": "2026/08/06", "media": "日経クロステック", "title": "【ニュース解説】ドコモ・バイクシェアで障害、発端はシステム更改 「7日には東京で復旧」"}, {"date": "2026/08/06", "media": "東京読売新聞 朝刊", "title": "金沢「まちのり」 利用を一時停止 システム不具合＝石川"}, {"date": "2026/08/06", "media": "CNET Japan", "title": "ドコモ・バイクシェアの障害、あす7日復旧へ－－背景に「NOLL」刷新へのシステム移行"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ前田社長が「ahamo40GB化は検証のため」、料金値上げへの考え方にも言及"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ・バイクシェアの障害、原因はシステム移行 都内は明日7日に復旧作業"}, {"date": "2026/08/05", "media": "毎日新聞 朝刊", "title": "ドコモ・バイクシェア：ドコモ系自転車、貸し出し一時停止"}, {"date": "2026/08/05", "media": "レスポンス", "title": "熊本地震1週間、TSMCなど半導体工場復旧、ホンダ国内3工場は8月19日まで停止［新聞ウォッチ］"}, {"date": "2026/08/04", "media": "日本経済新聞電子版", "title": "ドコモのシェアサイクル、サービス一時停止 システム障害で"}, {"date": "2026/08/04", "media": "共同通信ニュース", "title": "ドコモ系自転車、一時停止―システム不具合"}, {"date": "2026/08/04", "media": "時事通信ニュース", "title": "シェアサイクルの提供一時停止＝ドコモ・バイクシェア"}, {"date": "2026/08/04", "media": "ITmedia NEWS", "title": "ドコモ・バイクシェア、サービス一時停止 不具合の復旧見通し立たず"}, {"date": "2026/08/04", "media": "ITmedia Mobile", "title": "ドコモ・バイクシェアのサービス全国で一時停止 システム不具合で 利用料金や返却はどうなる？"}, {"date": "2026/08/04", "media": "TRAICY", "title": "ドコモ・バイクシェア、サービス一時停止 システム不具合で"}, {"date": "2026/07/31", "media": "日本経済新聞電子版", "title": "ドコモビジネス、供給網全体の不正通信を検知 初動対応を支援"}, {"date": "2026/07/31", "media": "朝日新聞 朝刊", "title": "クマ被害増加、対策急ぐ県 昨年「保護」解除 ／三重県"}, {"date": "2026/07/31", "media": "東京読売新聞 朝刊", "title": "熊本地震 通信障害がすべて解消"}, {"date": "2026/07/31", "media": "ITmedia NEWS", "title": "熊本地震による通信障害、携帯4社全てで復旧"}, {"date": "2026/07/30", "media": "日本経済新聞電子版", "title": "通信大手4社、熊本地震の障害復旧 コカ・コーラは工場再開へ"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕ソフトバンク、熊本県内の通信障害が復旧＝スターリンクなど活用"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕NTTドコモとソフトバンク、通信障害が解消"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯3社が復旧＝熊本地震で通信障害☆差替"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯4社、通信障害復旧"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯4社、通信障害復旧＝熊本震度7"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本地震の通信障害、ソフトバンクが復旧 他3キャリアでは障害が続く"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "楽天モバイルの障害が復旧 熊本県の通信障害、4キャリアで復旧に"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本県の通信障害、ドコモとKDDIが復旧"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "ドコモとKDDI、熊本地震影響の障害から復旧"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "トヨタ3工場月内停止、半導体・飲料工場も止まる 熊本地震の影響拡大"}, {"date": "2026/07/29", "media": "日経クロステック", "title": "【2026年熊本地震】熊本地震で「JAPANローミング」発動、過去のキャリア通信障害の教訓生かす"}, {"date": "2026/07/29", "media": "日経ビジネス電子版", "title": "【Views】熊本県で震度7 ソニーやルネサスは停止、ローソンやファミマ社長が現地入り"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "日本製紙の煙突倒壊、2人心肺停止9人閉じ込め ホンダは稼働停止"}, {"date": "2026/07/29", "media": "東京読売新聞 朝刊", "title": "熊本震度7 道隆起 交通混乱 停電や断水 通信障害も"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯大手、通信障害続く＝ソフトバンクも"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "auの「iPhone 17」シリーズを値上げ、2年間の負担額も多くの機種で引き上げ 7月31日から"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "熊本地震の影響で通信障害が続く ドコモとKDDIはJAPANローミングを提供中、無料Wi-Fi「00000JAPAN」も開放"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "ソフトバンクと楽天モバイルもJAPANローミングを提供 熊本地震の影響で障害が続く"}, {"date": "2026/07/29", "media": "INTERNET Watch", "title": "総務省、令和8年熊本地震に関する通信インフラなどの被害状況を公開"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "ソフトバンクが熊本地震の通信障害で一部復旧、「JAPANローミング」提供中"}, {"date": "2026/07/29", "media": "東洋経済オンライン", "title": "「地震でスマホが圏外でも諦めない！」この1年で激変した\"つながるための新常識\"と、熊本での実際の有効性／"}, {"date": "2026/07/28", "media": "日経クロステック", "title": "【ニュース】熊本県の一部で通信障害発生、地震の影響 NTTドコモやKDDIなど"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモール爆発＝日本製紙の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震☆差替"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモールで爆発＝日本製紙、工場の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震"}, {"date": "2026/07/28", "media": "ITmedia NEWS", "title": "携帯各社、熊本の一部で通信障害 震度7の地震で 他社回線につながる「JAPANローミング」開始【追記】"}, {"date": "2026/07/28", "media": "ITmedia Mobile", "title": "熊本県の最大震度7の地震で通信サービスに障害 災害伝言版も開設【更新】"}, {"date": "2026/07/28", "media": "ケータイ Watch", "title": "総務省、携帯電話各社の被害報告を公開 KDDIとソフトバンクの状況が鮮明に"}, {"date": "2026/07/27", "media": "ケータイ Watch", "title": "ドコモ、iPhone 17シリーズなど値上げへ"}, {"date": "2026/07/24", "media": "ITmedia Mobile", "title": "ドコモが「iPhone 17」シリーズや「iPhone Air」を値上げ 一部機種は残価も引き上げ、実質負担額の影響は？"}, {"date": "2026/07/23", "media": "ケータイ Watch", "title": "「発火事故の軽減に貢献したい」、ドコモがモバイルバッテリーに力を入れる理由"}, {"date": "2026/07/23", "media": "プレジデントオンライン", "title": "配偶者が先立つと年金額が減少…タイプ別「100歳までお金が尽きない家計設計」"}, {"date": "2026/07/22", "media": "ITmedia Mobile", "title": "4キャリアのiPhoneも値上げされる？ ドコモ、KDDI、ソフトバンク、楽天モバイルに確認した【7月22日時点】"}, {"date": "2026/07/21", "media": "ITmedia Mobile", "title": "Apple値上げ後も「2年実質24円」は消えず 4キャリアの「iPhone 17／17e」価格まとめ【7月21日版】"}, {"date": "2026/07/19", "media": "マイナビニュース", "title": "フィッシング詐欺に異変、国内ISPのメールアカウント悪用が急増"}, {"date": "2026/07/16", "media": "ケータイ Watch", "title": "16日午前にクレカ障害、d払いやモバイルSuica・モバイルPASMOなど影響"}, {"date": "2026/07/16", "media": "ケータイ Watch", "title": "ドコモオンラインショップで補償の契約に不具合、機種変更のユーザーに影響"}, {"date": "2026/07/13", "media": "＠IT", "title": "700キロ先でも成功、“60GHz帯”無線LANでつないだロボットを低遅延制御 その通信とは？"}, {"date": "2026/07/13", "media": "Business Insider Japan PREMIUM", "title": "通信と金融は「混ぜるな危険」か。NTTドコモFG発足に見る銀行とキャリアが陥る経済圏のジレンマ"}, {"date": "2026/07/11", "media": "東京読売新聞 朝刊", "title": "携帯「060」提供 不具合で遅れ 総務相「年度内対応を」"}, {"date": "2026/07/11", "media": "ITmedia Mobile", "title": "携帯電話回線の契約時にする「本人確認」にはルールがある 厳格化で行政指導は減るのか？"}, {"date": "2026/07/10", "media": "CNET Japan", "title": "ドコモ、燃えにくい「準固体」モバイルバッテリー発売－－不要バッテリーの無料回収も開始"}, {"date": "2026/07/10", "media": "ITmedia NEWS", "title": "NTTドコモ、「準固体モバイルバッテリー」発売 不要なモバイルバッテリーの無料回収も"}, {"date": "2026/07/10", "media": "ITmedia Mobile", "title": "ドコモが「準固体モバイルバッテリー01M」発売 ドコモショップ限定割引＆不要バッテリー回収も"}, {"date": "2026/07/10", "media": "ケータイ Watch", "title": "ドコモショップでモバイルバッテリーを無料回収 過去に販売した製品が対象"}, {"date": "2026/07/09", "media": "日経クロステック", "title": "【ニュース解説】携帯新番号「060」7月開始が延期、時期未定に 原因は一部端末の改修遅延"}, {"date": "2026/07/03", "media": "ITmedia Mobile", "title": "エディオンら、携帯契約時に義務違反 総務省が発表 NTTドコモにも行政指導"}, {"date": "2026/07/03", "media": "ケータイ Watch", "title": "ドコモFGのdカード、Google Payに設定できない不具合"}, {"date": "2026/06/28", "media": "日本経済新聞電子版", "title": "なりすましメール防御、甘い日本 危機意識乏しく詐欺の標的に－Inside Out"}, {"date": "2026/06/28", "media": "ITmedia Mobile", "title": "ティム・クックCEOが「もはや限界」と値上げに言及――すでにAndroidでは値上げラッシュが始まる"}, {"date": "2026/06/27", "media": "日本経済新聞電子版", "title": "KDDIが楽天に揺さぶり、回線貸し出しの協業縮小も ｢敵に塩｣に懸念"}, {"date": "2026/06/26", "media": "ITmedia Mobile", "title": "iPadやMac値上げでiPhoneはどうなる？ Apple直販は価格維持も、キャリアや量販店で値上げの動きが続く"}, {"date": "2026/06/26", "media": "ITmedia Mobile", "title": "ドコモ、広島や大分の一部地域で通信障害 台風7号の影響 JAPANローミングは発動せず"}, {"date": "2026/06/26", "media": "ケータイ Watch", "title": "ドコモで通信障害、台風7号と大雨の影響により広島・大分・沖縄の一部で"}, {"date": "2026/06/25", "media": "東京読売新聞 朝刊", "title": "携帯、短期解約横行 抑制へ「ポイント分割」案 総務省、年度内にも 長期契約促す"}, {"date": "2026/06/24", "media": "NHKニュース", "title": "サイバー攻撃対策 新サービスの開発相次ぐ AIが情報漏えい検知し悪用を防ぐなど"}, {"date": "2026/06/22", "media": "時事通信ニュース", "title": "KDDI、手数料値上げ"}, {"date": "2026/06/22", "media": "時事通信ニュース", "title": "KDDI、手数料値上げ"}, {"date": "2026/06/18", "media": "ITmedia Mobile", "title": "DAZNサッカープラン「返金・解約」手続き発表 「画面に書けばOK」はもう通じず――炎上背景と教訓を徹底分析"}, {"date": "2026/06/16", "media": "日経クロステック", "title": "【ニュース解説】NTTドコモ、設備保守をAIで効率化 障害時の初動時間は6割短縮"}, {"date": "2026/06/16", "media": "ITmedia ビジネスオンライン", "title": "ANA新運賃はなぜ“炎上”したのか フルサービス航空会社が見誤った顧客心理"}, {"date": "2026/06/16", "media": "ケータイ Watch", "title": "ドコモ「爆アゲ」、7月から「Nintendo Switch Online」を値上げ"}, {"date": "2026/06/16", "media": "東洋経済オンライン", "title": "スマートニュース、リストラから3年を経てアメリカ事業がついに黑字化…収益改善が進んだ要因はどこにあるのか／"}, {"date": "2026/06/12", "media": "ITmedia ビジネスオンライン", "title": "BeRealはNG、なのにAI議事録はスルー…… 日本企業が目を背ける情報漏えい対策の限界"}, {"date": "2026/06/12", "media": "ITmedia Mobile", "title": "ドコモの「Nexus 5X」「AQUOS ZETA」などで26年10月以降に通話不可になる事象 3G設備撤去に伴う不具合"}, {"date": "2026/06/10", "media": "朝日新聞 朝刊", "title": "（さくらと暮らして）デジタルの悩み、寄り添う先生 教室や出張訪問、詐欺対応も指南／山口県"}, {"date": "2026/06/09", "media": "ITmedia Mobile", "title": "ドコモの通信障害に“AIエージェント”が先手 「SNSの投稿」も常時監視するオペレーションセンターの裏側"}, {"date": "2026/06/09", "media": "business network．jp", "title": "ドコモのネットワーク運用はAIでどう変わった？ 障害対応の司令塔「NOC」や「大ゾーン基地局」も公開"}, {"date": "2026/06/05", "media": "日本経済新聞電子版", "title": "NTT、データ拠点売却や金融事業に上振れ余地 ドコモ値上げが焦点－市場が期待する銘柄④"}, {"date": "2026/06/04", "media": "ケータイ Watch", "title": "台風6号による通信障害、一部が復旧"}, {"date": "2026/06/04", "media": "東洋経済オンライン", "title": "「圏外」を救うStarlinkが稼ぐ巨額マネー、SpaceX上場で見えた\"ロケット企業ではない\"実像とAIへの大賭け／"}, {"date": "2026/06/03", "media": "ITmedia PC USER", "title": "「最初は高いが、かえって安い」顧客満足度1位を支えるモノ作り VAIOの糸岡社長が語る“値上げ”の真意と次なる挑戦"}, {"date": "2026/06/03", "media": "ケータイ Watch", "title": "台風6号で沖縄・九州・四国・東海の一部で通信障害"}, {"date": "2026/06/02", "media": "NHKニュース", "title": "台風6号 通信への影響 沖縄・奄美の一部地域 電話やインターネットで通信障害"}, {"date": "2026/06/02", "media": "ケータイ Watch", "title": "台風6号の影響で沖縄・鹿児島の一部で通信障害"}, {"date": "2026/06/01", "media": "日経ビジネス", "title": "日経ビジネスLIVE予告－オコシ－2日間の人的資本経営イベント AIエージェント時代の シン・アジャイル組織 人的資本経営、次のフェーズへ 隠れデジタル赤字45兆円 日本の生存戦略を若手経産官僚が徹底解説"}, {"date": "2026/05/30", "media": "朝日新聞 朝刊", "title": "ドコモショップ、詐欺被害防ぐ ニセ法務省・警察「LINEで連絡」 名張署、店長に感謝状／三重県"}, {"date": "2026/05/30", "media": "週刊東洋経済", "title": "ニュース＆トピックス最前線－01 NTTで異例の副社長人事 「通信中心」脱却で反撃へ 02ベアリング2強が経営統合 それぞれの“弱み”の深刻度 03 包装資材が相次ぐ値上げ 高まるスーパーの再編機運"}, {"date": "2026/05/28", "media": "朝日新聞 朝刊", "title": "詐欺罪被告ら、無罪確定 ／愛知県"}, {"date": "2026/05/28", "media": "ケータイ Watch", "title": "ドコモ、Pixel 10aなど値上げ 「いつでもカエドキプログラム」残価も変更"}, {"date": "2026/05/27", "media": "日経クロステック", "title": "【試み続々、AIとネットワーク運用】ネットワークトラブル発生時にAI使う先進5社、障害対応や原因究明を支援"}, {"date": "2026/05/27", "media": "東洋経済オンライン", "title": "アサヒ、花王、サントリーなどが集団防御力アップを狙い「流通ISAC」を設立、恐るべき\"サイバー被害共倒れ\"を減らせるか？／"}, {"date": "2026/05/26", "media": "CNET Japan", "title": "ドコモ、AIで「詐欺をチェック」する新サービスを月額999円から提供"}, {"date": "2026/05/25", "media": "日本経済新聞電子版", "title": "NTTドコモ、「あんしんセキュリティ スタンダードプラン 詐欺対策プラス」などを提供開始"}, {"date": "2026/05/25", "media": "日本経済新聞電子版", "title": "デジタル給与の利用1.5%と低迷 厚労省が参入要件の緩和検討"}, {"date": "2026/05/25", "media": "日経クロステック", "title": "【知って得するスマホ話】「Xperia 1 VIII」が大幅値上げ 見合う価値はあるか、買い方も検証"}, {"date": "2026/05/23", "media": "ITmedia Mobile", "title": "「値上げ」は悪手ではない？ KDDIとソフトバンクの“価値競争への転換”から見える勝ち筋"}, {"date": "2026/05/22", "media": "日経クロステック", "title": "【日本的スマホ論】携帯大手3社がAI事業へ傾倒、国内携帯電話産業の衰退につながらないか"}, {"date": "2026/05/22", "media": "CNET Japan", "title": "生成AIに個人情報を入力、「肯定」35％ 「否定」38％で割れる－－ドコモ調査"}, {"date": "2026/05/22", "media": "ITmedia Mobile", "title": "なぜ「ドコモの障害」と誤解されたのか？ 19日に設備障害が起きたMVNOに確認して分かったこと"}, {"date": "2026/05/21", "media": "INTERNET Watch", "title": "NTTドコモビジネス、AIエージェントとSOARで高度化したサイバー攻撃から守る「AI SOC」提供開始"}, {"date": "2026/05/20", "media": "日本経済新聞電子版", "title": "どうなる「Pay」、撤退･参入･再編相次ぐ 最大手PayPayは地歩固める"}, {"date": "2026/05/20", "media": "日経クロステック", "title": "【モバイル一刀両断】携帯料金の値上げ効果は絶大、苦境のドコモをよそにソフトバンクが投資拡大"}, {"date": "2026/05/20", "media": "時事通信ニュース", "title": "NTTドコモビジネス、AIでサイバー攻撃を監視・対処＝高速化する攻撃に対応"}, {"date": "2026/05/19", "media": "東京読売新聞 夕刊", "title": "SNSの怖さ ゲームで学ぶ 無料公開 授業にも導入 デマ拡散、投資詐欺、性的脅迫"}, {"date": "2026/05/19", "media": "CNET Japan", "title": "「ドコモがつながらない」SNS投稿増加も「自社サービスは正常」と同社 一部MVNOには影響"}, {"date": "2026/05/19", "media": "ITmedia NEWS", "title": "ドコモはとばっちり？ 19日の通信障害、原因はMVNOの設備不具合 DTIも報告"}, {"date": "2026/05/19", "media": "ITmedia NEWS", "title": "ドコモで通信障害？ SNSでは「つながらない」の声あるも「設備故障は確認できない」 状況確認中"}, {"date": "2026/05/19", "media": "ITmedia Mobile", "title": "ドコモ、「つながりにくい」投稿の原因は「一部MVNOの設備トラブル」と発表 誤認SNSで拡散後、同社が最終結果を報告"}, {"date": "2026/05/19", "media": "ITmedia Mobile", "title": "ドコモで通信障害か SNSで「圏外になる」「つながらない」の声"}, {"date": "2026/05/19", "media": "ケータイ Watch", "title": "「ドコモで通信障害？」、SNSの声にドコモ「設備故障ではない。状況確認中」"}, {"date": "2026/05/19", "media": "ケータイ Watch", "title": "ドコモ、19日午前「通信障害」のSNS投稿は一部MVNOの設備不具合と発表"}, {"date": "2026/05/19", "media": "東洋経済オンライン", "title": "PayPay「支払い期限が過ぎています」、焦ってクリックは危険しかない\"急増する送金催促メール\"どんなメッセージが届く？／"}, {"date": "2026/05/18", "media": "AV Watch", "title": "ニコニコの有料プランが790円から990円へ値上げ。ストレージやセキュリティ対策コスト増"}, {"date": "2026/05/15", "media": "ITmedia Mobile", "title": "ドコモが「mopera U」の「Uスタンダードプラン」を終了へ シンプルプランは値上げ"}, {"date": "2026/05/15", "media": "ケータイ Watch", "title": "ドコモ、「mopera U」の「シンプルプラン」を220円→330円に値上げ"}, {"date": "2026/05/14", "media": "ITmedia Mobile", "title": "IIJ谷脇社長、ドコモ回線問題について「キャリアとMVNOの原因切り分けが難しい」 IIJmioの値上げは予定なし"}, {"date": "2026/05/14", "media": "ITmedia Mobile", "title": "25年国内スマホ出荷台数は増加も26年は減少見込み Apple、Google、サムスンが3強 MM総研調べ"}, {"date": "2026/05/14", "media": "ITmedia Mobile", "title": "楽天モバイルは「市場シェアが十分に高くない」 三木谷氏、値上げ質問に“明言を避ける”"}, {"date": "2026/05/13", "media": "毎日新聞 朝刊", "title": "詐欺：かけ放題で詐欺 会社役員ら無罪 名古屋地裁判決"}, {"date": "2026/05/13", "media": "中部読売新聞 朝刊", "title": "回線利用料詐欺 3人に無罪判決 名古屋地裁＝愛知"}, {"date": "2026/05/13", "media": "ケータイ Watch", "title": "ドコモ、「spモード」申し込みなどで障害"}, {"date": "2026/05/13", "media": "Business Insider Japan PREMIUM", "title": "絶好調のソフトバンクが「AI投資は収穫期」と意気込む新戦略。PayPay上場や携帯料金値上げで地盤固める"}, {"date": "2026/05/12", "media": "ケータイ Watch", "title": "KDDI松田社長、携帯料金プランは「値上げありきではなく付加価値ありき」"}, {"date": "2026/05/11", "media": "CNET Japan", "title": "ソフトバンク、LINEMOの値上げは「今のところ考えていない」 主力2ブランドの値上げと一線"}, {"date": "2026/05/11", "media": "ITmedia Mobile", "title": "LINEMOの値上げは「今のところ予定なし」――ソフトバンク社長明言 コスト削減の限界に達した背景も明かす"}, {"date": "2026/05/11", "media": "マイナビニュース", "title": "知って納得、ケータイ業界の\"なぜ\" 第220回 業績悪化が続くも既存プランの値上げに踏み切らないNTTドコモ、一体なぜなのか"}, {"date": "2026/05/11", "media": "東洋経済オンライン", "title": "衛星スマホ通信「3社出揃い」で横並び、勝負は圏外の先へ──次に差がつく\"つながった後\"の競争／"}, {"date": "2026/05/11", "media": "Business Insider Japan PREMIUM", "title": "踏み切れないドコモの料金値上げ。「つながらない」利用者の声とNTT中期計画「重圧」の中で来期も減収へ"}, {"date": "2026/05/09", "media": "産経新聞 東京朝刊", "title": "NTT 経営戦略見直し ドコモ減益、値上げ示唆"}, {"date": "2026/05/09", "media": "産経新聞 大阪朝刊", "title": "NTTが経営戦略見直し ドコモ減益、値上げ示唆"}, {"date": "2026/05/09", "media": "ITmedia Mobile", "title": "なぜドコモは「値上げ」に踏み切れないのか？ 背景にある通信品質、5G設備投資の遅れが足かせに"}, {"date": "2026/05/08", "media": "NHKニュース", "title": "NTT 今年度最終利益は5％余減少へ ドコモのシェア低下に伴う収益悪化などで"}, {"date": "2026/05/08", "media": "CNET Japan", "title": "NTTドコモ社長、既存プランの料金値上げ 「考えなければ」"}, {"date": "2026/05/08", "media": "ITmedia Mobile", "title": "ドコモ、MNPが転入超過も25年度は減益 山手線の速度77％改善などネットワーク強化もアピール"}, {"date": "2026/05/08", "media": "ITmedia Mobile", "title": "ドコモの値上げは「簡単な話ではない」と前田社長 実施を検討も、時期は明かさず"}, {"date": "2026/05/08", "media": "ケータイ Watch", "title": "ドコモ、2025年度は増収減益 コンシューマ通信の減益をスマートライフと法人でカバー"}, {"date": "2026/05/08", "media": "ケータイ Watch", "title": "ドコモ前田社長、携帯料金の値上げに「考えなければいけない」"}, {"date": "2026/05/08", "media": "business network．jp", "title": "NTTが「EBITDA4兆円」を2030年度へ延期 環境変化によるモバイル事業の減益が影響"}, {"date": "2026/05/05", "media": "日本経済新聞電子版", "title": "香港CKハチソン､英通信から撤退へ ボーダフォンに9100億円で売却"}, {"date": "2026/05/02", "media": "ITmedia Mobile", "title": "Appleが「端末残価」でAndroid陣営を異例の批判、「ホッピング対策」で新たな縛りも？ ルール見直しの焦点"}, {"date": "2026/04/24", "media": "産経新聞 東京朝刊", "title": "インフラ・害獣 「圏外」に商機 KDDI 法人向けスターリンク活用"}, {"date": "2026/04/24", "media": "産経新聞 大阪朝刊", "title": "インフラ・害獣 「圏外」に商機 KDDI 法人向けスターリンク活用"}, {"date": "2026/04/24", "media": "CNET Japan", "title": "au Starlink Direct、圏外からのSOS通報に対応 iPhone向け海外利用も拡大"}, {"date": "2026/04/23", "media": "東京読売新聞 夕刊", "title": "岩手山火事 ドコモ通信障害 他社が回線開放"}, {"date": "2026/04/23", "media": "時事通信ニュース", "title": "KDDI、圏外でもSOS可能に＝衛星との直接通信、競う携帯各社"}, {"date": "2026/04/23", "media": "時事通信ニュース", "title": "KDDI、圏外でもSOS可能に＝衛星との直接通信、競う携帯各社"}, {"date": "2026/04/23", "media": "NHKニュース", "title": "岩手・大槌町で山林火災 ドコモの通信障害は夕方時点でも続く 復旧の見通し立たず"}, {"date": "2026/04/23", "media": "ITmedia NEWS", "title": "岩手県の山林火災でドコモに通信障害 初めて提供された「JAPANローミング」の仕組みと注意点"}, {"date": "2026/04/23", "media": "ケータイ Watch", "title": "ドコモが光回線の工事料値上げ、6月から「ドコモ光」「ahamo光」で"}, {"date": "2026/04/22", "media": "日本経済新聞電子版", "title": "NTTドコモ、岩手の山林火災で通信障害 他社回線を初開放"}, {"date": "2026/04/22", "media": "日経クロステック", "title": "【モバイル一刀両断】ソフトバンクが値上げでKDDIに追随、苦境のドコモと楽天モバイルはどうする"}, {"date": "2026/04/22", "media": "時事通信ニュース", "title": "ドコモ、岩手の山林火災で通信障害＝「JAPANローミング」を初提供"}, {"date": "2026/04/22", "media": "時事通信ニュース", "title": "ドコモ、岩手の山林火災で通信障害＝「JAPANローミング」を初提供"}, {"date": "2026/04/22", "media": "ITmedia Mobile", "title": "ドコモ、東北の一部エリアで通信障害 「JAPANローミング」初提供、その使い方は？"}, {"date": "2026/04/22", "media": "ケータイ Watch", "title": "ドコモで通信障害、岩手県大槌町の山林火災で「JAPANローミング」提供"}, {"date": "2026/04/20", "media": "日経クロステック", "title": "【転換期を迎える「Pay」】乱立「Pay」に異変 ゆうちょ銀は撤退しJR東⻄が参入、地歩固めるPayPay"}, {"date": "2026/04/20", "media": "ITmedia Mobile", "title": "ドコモがdポイントの不正利用対策を導入 アプリ専用番号を表示、起動後5分間だけ使える仕様に"}, {"date": "2026/04/20", "media": "ケータイ Watch", "title": "ドコモ、dポイントの不正利用対策を強化 アプリ専用番号と5分間の利用制限を7月から導入"}, {"date": "2026/04/18", "media": "日本経済新聞電子版", "title": "携帯大手､料金×ポイント×通信品質の総合力勝負へ 値上げ出そろう－ITジャーナリスト 石川温"}, {"date": "2026/04/17", "media": "ITmedia Mobile", "title": "ドコモが「iPhone 16／17／17e」を値上げ、残価引き上げで実質価格は維持"}, {"date": "2026/04/17", "media": "東洋経済オンライン", "title": "ソフトバンクが既存プラン一律値上げ、KDDI批判の「優先接続」を自ら導入、衛星通信・高速接続を束ねた\"追随戦略\"に／"}, {"date": "2026/04/16", "media": "ケータイ Watch", "title": "ドコモ、「iPhone 16／17／17e」など値上げ 返却で免除の残価は増額"}, {"date": "2026/04/14", "media": "ITmedia Mobile", "title": "値上げのソフトバンクが仕掛ける「PayPayカード ゴールド」シフト、新プラン移行の障壁になる懸念も"}, {"date": "2026/04/13", "media": "Business Insider Japan PREMIUM", "title": "ソフトバンク「ギリギリまで待った」料金値上げの影響は？ 新プラン「ペイトク2」や衛星通信・海外サービスも開始"}, {"date": "2026/04/11", "media": "朝日新聞 朝刊", "title": "値上げ相次ぐ携帯大手 6G投資へ、「官製値下げ」転換点 動画プランやポイント還元、競う"}, {"date": "2026/04/11", "media": "毎日新聞 朝刊", "title": "ソフトバンク：ソフトバンク値上げ 7月から 月額110〜550円増"}, {"date": "2026/04/11", "media": "産経新聞 東京朝刊", "title": "ソフトバンク料金値上げ 大手3社そろい踏み 6月から順次"}, {"date": "2026/04/11", "media": "産経新聞 大阪朝刊", "title": "ソフトバンク料金値上げ 6月から順次 大手3社そろい踏み"}, {"date": "2026/04/10", "media": "日本経済新聞電子版", "title": "携帯大手の値上げそろい踏み、ソフトバンク6％上げ 安値競争「限界」に－ビジネスTODAY"}, {"date": "2026/04/10", "media": "共同通信ニュース", "title": "ソフトバンク携帯料金7月値上げ―衛星通信サービス開始"}, {"date": "2026/04/10", "media": "ITmedia NEWS", "title": "ソフトバンクも「Starlink Direct」開始 圏外でも通信、LINEやPayPay、Yahoo!マップなど対応"}, {"date": "2026/04/10", "media": "ITmedia Mobile", "title": "値上げの結論を出したソフトバンク なぜ一部プランで“月額1万円超え”に？"}, {"date": "2026/04/10", "media": "ITmedia Mobile", "title": "ソフトバンク値上げの背景に「通信品質維持の限界点」 Y!mobileは収益重視で改定、LINEMOは据え置き"}, {"date": "2026/04/10", "media": "ITmedia Mobile", "title": "ソフトバンク、Starlink衛星とスマホの直接通信を開始 圏外でもLINEやPayPayが使える"}, {"date": "2026/04/09", "media": "日本経済新聞電子版", "title": "日本エンタープライズ、26年5月期の純利益を4500万円に下方修正"}, {"date": "2026/04/09", "media": "日本経済新聞電子版", "title": "イオンモバイル、顧客の9割は40代以上 携帯大手並みの低い解約率"}, {"date": "2026/04/08", "media": "＠IT", "title": "アサヒのランサム被害の教訓を生かせ 流通大手がISAC設立、その背景と課題を読みとく"}, {"date": "2026/04/08", "media": "MONOist", "title": "コンビナートで大容量低遅延通信を実証、屋外スマートメンテナンスの基盤構築へ"}, {"date": "2026/04/07", "media": "クラウド Watch", "title": "NTTグループと1Finity、三菱ケミカル、IOWN APNと60GHz帯無線LANの活用によりコンビナートの高度化に向けた大容量・低遅延通信環境を実証"}, {"date": "2026/04/07", "media": "マイナビニュース", "title": "IOWN APNと60GHz帯無線LANにより、コンビナートの保守を効率化する低遅延通信環境を実現"}, {"date": "2026/04/06", "media": "日本経済新聞電子版", "title": "NTTグループなど、IOWN APNと60GHz帯無線LANでコンビナートの高度化を支える大容量・低遅延通信環境を実証"}, {"date": "2026/04/04", "media": "ITmedia Mobile", "title": "ドコモ一部4G機種で通話不可も、「データ通信への影響はない」 3G停波に伴い不具合"}, {"date": "2026/04/04", "media": "東洋経済オンライン", "title": "ドコモ「人文字」炎上に見る大企業の\"致命的盲点\""}, {"date": "2026/04/03", "media": "日経クロステック", "title": "【ニュース】NTTドコモの顧客接点システムでトラブル、店頭やネット手続きに影響"}, {"date": "2026/04/03", "media": "朝日新聞 朝刊", "title": "衛星とスマホ通信、サービス開始へ 圏外でもSMSなど利用 ドコモ・ソフトバンク"}, {"date": "2026/04/03", "media": "CNET Japan", "title": "ドコモでシステム障害、解約やMNPなどが利用しづらく（復旧）"}, {"date": "2026/04/03", "media": "ITmedia NEWS", "title": "【復旧】ドコモで各種手続きがしづらい状態に 店頭、Webサイトでも 原因は顧客システムの障害"}, {"date": "2026/04/03", "media": "ケータイ Watch", "title": "ドコモ、各種手続きで障害 3日午前〜【復旧】"}, {"date": "2026/04/02", "media": "ケータイ Watch", "title": "ドコモ、コアネットワークを完全仮想化 障害の自動復旧や災害時のつながりやすさ強化"}, {"date": "2026/04/02", "media": "ケータイ Watch", "title": "ドコモの一部4G機種で通信・通話不可の不具合、3G停波に伴い"}, {"date": "2026/04/02", "media": "プレジデントオンライン", "title": "「JR運賃値上げ」はJRを使わない人にも大打撃…「定期代が上がる」だけではない生活に重くのしかかる意外な影響"}, {"date": "2026/03/31", "media": "日本経済新聞電子版", "title": "NTTドコモ「iモード」に幕 孤高主義の失敗、6G･IOWN展開に生かす"}, {"date": "2026/03/31", "media": "東京読売新聞 朝刊", "title": "携帯乗り換え 短期解約横行 特典目当て 総務省会議が対策議論"}, {"date": "2026/03/28", "media": "ITmedia Mobile", "title": "4月1日から自転車「ながらスマホ」に“⻘切符” ドコモとKDDIも警告、危険性や罰則金は？"}, {"date": "2026/03/27", "media": "ケータイ Watch", "title": "ドコモオンラインショップで購入できない障害が復旧"}, {"date": "2026/03/26", "media": "日経クロステック", "title": "【AIインフラ最前線】生成AIで従来型インフラは限界に、IOWN APNで距離と遅延の壁を克服"}, {"date": "2026/03/26", "media": "Business Insider Japan PREMIUM", "title": "「つながらないドコモ」は変わるか。3G終了で空く周波数帯が、品質改善の切り札になる可能性"}, {"date": "2026/03/25", "media": "日経クロステック", "title": "【モバイル一刀両断】携帯大手並みに解約率が低い格安SIM、イオンモバイルの強みと意外な弱点"}, {"date": "2026/03/25", "media": "東京読売新聞 朝刊", "title": "SNS投稿 危険性学ぶ 渋谷区立代々木中 ゲームで疑似体験＝東京"}, {"date": "2026/03/25", "media": "東洋経済オンライン", "title": "災害時、圏外なくすJAPANローミングの実力と課題"}, {"date": "2026/03/24", "media": "東洋経済オンライン", "title": "筑波大\"寄宿料値上げ\"で露呈した対話能力の欠如"}, {"date": "2026/03/23", "media": "東京読売新聞 夕刊", "title": "［お悩み解決］特定原付 手軽さで普及 事故増加 飲酒運転は罰金も ヘルメット着用を"}, {"date": "2026/03/19", "media": "東京読売新聞 朝刊", "title": "ローミング 通信障害 他社回線でカバー 携帯大手、新サービス 4月1日開始"}, {"date": "2026/03/18", "media": "大阪読売新聞 朝刊", "title": "特殊詐欺防止 ドコモと連携 県警協定 アプリ普及努める＝徳島"}, {"date": "2026/03/18", "media": "CNET Japan", "title": "障害時に他社網に接続する「JAPANローミング」4月1日始動 ドコモ・KDDI・ソフトバンク・楽天モバイル"}, {"date": "2026/03/18", "media": "PC Watch", "title": "災害／障害時に他社回線へつながる「JAPANローミング」。携帯5社が共同提供"}, {"date": "2026/03/18", "media": "マイナビニュース", "title": "大手通信キャリア5社、災害・障害発生時の通信を支える「JAPANローミング」4月1日より提供開始"}, {"date": "2026/03/17", "media": "ITmedia PC USER", "title": "スマートウォッチのセルラー通信を解約した話 通信費の見直しで……“結局使わなかった”理由は"}, {"date": "2026/03/17", "media": "INTERNET Watch", "title": "偽・誤情報対策は“予防接種”（プレバンキング）が重要に〜あらかじめ手口を知ることで、拡散行動は減少する"}, {"date": "2026/03/16", "media": "ITmedia エンタープライズ", "title": "マツダはAIをどう全社展開している？ 「トップダウンで進めるボトムアップの取り組み」とは"}, {"date": "2026/03/16", "media": "ITmedia Mobile", "title": "イオンモバイルの解約率が低下したワケ 「家族シェア44％」「シニア約7割」と独自の進化を遂げた10年"}, {"date": "2026/03/14", "media": "ITmedia Mobile", "title": "ドコモ3G終了が迫る 放置すると「自動解約」に FOMAユーザーが注意すべきこと"}, {"date": "2026/03/12", "media": "毎日新聞 夕刊", "title": "特集ワイド：警察詐欺電話、遭ってみると… 「あなたに容疑が」→「お金振り込んで」"}, {"date": "2026/03/11", "media": "ケータイ Watch", "title": "ドコモオンラインショップで一部手続きに障害、クレカ決済や端末購入プログラム利用など"}, {"date": "2026/03/10", "media": "中部読売新聞 朝刊", "title": "金1300万円相当詐欺被害＝岐阜"}, {"date": "2026/03/09", "media": "AV Watch", "title": "「ディズニープラス」3月25日値上げ。スタンダードが月額1250円に"}, {"date": "2026/03/05", "media": "EE Times Japan", "title": "遠隔GPUで低遅延AI映像解析、NTTが実証 IOWN APN活用"}, {"date": "2026/03/05", "media": "東洋経済オンライン", "title": "「モバイルバッテリー」発火事故から守る鉄則6つ"}, {"date": "2026/03/04", "media": "日経クロステック", "title": "【ニュース解説：土木】鹿島、自動物流道路に光ファイバー敷設 落下物や火災を検知し搬送機器停止"}, {"date": "2026/03/04", "media": "INTERNET Watch", "title": "NTTドコモら、「In－Network Computing」による低遅延AI映像解析の実証実験に成功"}, {"date": "2026/03/03", "media": "ITmedia エンタープライズ", "title": "NTTドコモ、AIエージェントで障害対応時間50％削減見込む 100万台超のネットワーク機器をリアルタイム分析"}, {"date": "2026/03/02", "media": "日本経済新聞電子版", "title": "NTTドコモとNTT、In-Network Computingにより低遅延なAI映像解析の実証実験に成功"}, {"date": "2026/02/25", "media": "business network．jp", "title": "ドコモ、ネットワーク保守業務向けAIエージェントを商用化 障害対応工数を50%削減"}, {"date": "2026/02/25", "media": "日本経済新聞電子版", "title": "NTTドコモ、通信障害対応を生成AIで効率化 対応時間50%以上減"}, {"date": "2026/02/25", "media": "AV Watch", "title": "FOD、F1ライブ配信の「フジテレビNEXTsmartコース」を600円値上げ。4月から"}, {"date": "2026/02/22", "media": "日本経済新聞電子版", "title": "パソコンや周辺機器を処分するには？ ｢PCリサイクルマーク｣を確認－デジワザNavi"}, {"date": "2026/02/17", "media": "マイナビニュース", "title": "知って納得、ケータイ業界の\"なぜ\" 第214回 NTTドコモ業績下方修正も手放しで喜べない競合、決算から見える通信4社の現状"}, {"date": "2026/02/16", "media": "日本経済新聞電子版", "title": "動画配信、セット割引の損得 見終わったら解約・休止も"}, {"date": "2026/02/16", "media": "ケータイ Watch", "title": "AQUOSスマホの一部で緊急通報ができない不具合、海外SIM利用後に"}, {"date": "2026/02/14", "media": "共同通信ニュース", "title": "ドコモ携帯の3G、3月末終了―解約対象、高齢者中心に50万人"}, {"date": "2026/02/14", "media": "東洋経済オンライン", "title": "「つながらない」国難級災害で\"スマホ圏外\"の怖さ"}, {"date": "2026/02/13", "media": "日経クロステック", "title": "【日本的スマホ論】NTTドコモが業績下方修正で「独り負け」、競争力回復に求められるのは何か"}, {"date": "2026/02/13", "media": "INTERNET Watch", "title": "家電レンタルサービスがまた1つ打ち切りへ……NTTドコモ「kikito」が6月18日で終了"}, {"date": "2026/02/10", "media": "CNET Japan", "title": "ソフトバンク社長「どこかで値上げせざるを得ない」－－人件費などの高騰で"}, {"date": "2026/02/10", "media": "ケータイ Watch", "title": "「ドコモ電話帳」不具合、原因はGalaxyシリーズ固有の仕様"}, {"date": "2026/02/10", "media": "プレジデントオンライン", "title": "高市首相は常に危険にさらされている…軍事アナリストが呆れた「首相官邸のザル警備」の実態"}, {"date": "2026/02/09", "media": "ITmedia Mobile", "title": "ソフトバンク、短期解約を繰り返す「ホッピングユーザー」を抑制 その理由は？"}, {"date": "2026/02/09", "media": "ケータイ Watch", "title": "ソフトバンク宮川社長、携帯料金の値上げに「どこかでせざるを得ない」"}, {"date": "2026/02/06", "media": "東京読売新聞 朝刊", "title": "NTT、予想下方修正"}, {"date": "2026/02/06", "media": "ケータイ Watch", "title": "KDDI、モバイル事業が成長加速 ARPU上昇と解約率低下が鮮明に"}, {"date": "2026/02/06", "media": "Business Insider Japan PREMIUM", "title": "830億円下方修正のドコモ決算は「今年が底」か。スマホ購入プログラムで起きた「想定外」の事態"}, {"date": "2026/02/05", "media": "日本経済新聞電子版", "title": "NTTドコモ減益続く 5G整備遅れ携帯シェア低迷、基地局増で巻き返し"}, {"date": "2026/02/05", "media": "日経クロステック", "title": "【ニュース】ドコモの25年4〜12月期は増収減益、通期の営業利益予想を830億円引き下げ"}, {"date": "2026/02/05", "media": "日本経済新聞電子版", "title": "NTTドコモ26年3月期、純利益15％減に下方修正 設備投資・販促費響く"}, {"date": "2026/02/05", "media": "日本経済新聞電子版", "title": "NTTが下方修正、26年3月期純利益4%減 スマホ販促費膨らむ"}, {"date": "2026/02/05", "media": "共同通信ニュース", "title": "NTT、26年3月期減益に―傘下ドコモが業績悪化"}, {"date": "2026/02/05", "media": "時事通信ニュース", "title": "〔決算〕NTT、通期業績予想を下方修正＝ドコモの販促費など膨らむ"}, {"date": "2026/02/05", "media": "NHKニュース", "title": "NTT 2年連続減益の見込み 傘下のドコモで通信品質向上の設備投資コストかさむ"}, {"date": "2026/02/05", "media": "CNET Japan", "title": "ドコモの競争激化が響き、NTTが通期営業利益予想を1090億円下方修正"}, {"date": "2026/02/05", "media": "ITmedia Mobile", "title": "ドコモ、2025年度営業利益を830億円下方修正 MNP競争激化と「カエドキプログラム」コスト増が直撃"}, {"date": "2026/02/05", "media": "ケータイ Watch", "title": "ドコモの第3四半期決算は増収減益――通信改善“3倍ペース維持”を約束、競争激化もNTT島田氏は「戦いには勝たないといけない」"}, {"date": "2026/02/05", "media": "ケータイ Watch", "title": "NTT（持株）が通期予想を下方修正、ドコモの基盤強化に「想定以上の費用」"}, {"date": "2026/02/05", "media": "business network．jp", "title": "NTT、ドコモの顧客基盤強化に向け通期業績を下方修正 前田社長「2026年度中に他社を上回る通信品質を」"}, {"date": "2026/02/04", "media": "ITmedia NEWS", "title": "「東京ポイント」の「dポイント」交換が遅延 「エラー出る」との報告相次ぐ"}, {"date": "2026/02/04", "media": "ITmedia Mobile", "title": "東京ポイントからdポイントへの交換時にエラー ドコモが「遅延」と案内"}, {"date": "2026/02/03", "media": "マイナビニュース", "title": "知って納得、ケータイ業界の\"なぜ\" 第213回 NECが既存基地局事業から撤退、成長領域だったはずのモバイル通信をなぜ縮小するのか"}, {"date": "2026/01/28", "media": "日経クロステック", "title": "【モバイル一刀両断】5Gの展開が見事なKDDI、なぜか一部で基地局減少の楽天、総務省の調査結果"}, {"date": "2026/01/27", "media": "朝日新聞 朝刊", "title": "ドコモシェア縮小「業界2位になるかも」 NTT社長インタビュー"}, {"date": "2026/01/22", "media": "東京読売新聞 朝刊", "title": "詐欺サイト名 SNSで公開 県警サイバー対策本部 自己防衛意識向上に＝静岡"}, {"date": "2026/01/20", "media": "ITmedia Mobile", "title": "「MNP短期解約を対策してほしい」――携帯4キャリアが訴え 電気通信事業法のルールが足かせに"}, {"date": "2026/01/20", "media": "ITmedia Mobile", "title": "ドコモ装う「dアップグレード」にご用心 d払い不正利用にクレカ情報を狙う手口も"}, {"date": "2026/01/20", "media": "ScanNetSecurity", "title": "通信インフラへのサイバー攻撃を想定 〜 ICT-ISAC「2025年度サイバー攻撃対応演習（CAE2025）」実施"}, {"date": "2026/01/19", "media": "ITmedia Mobile", "title": "NTT、KDDI、ソフトバンク、楽天モバイルの宇宙戦略を解説 衛星や空飛ぶ基地局で「圏外」はどう消えるのか"}, {"date": "2026/01/16", "media": "CNET Japan", "title": "ドコモを装う不正アプリ「dアップグレード」に要注意 マルウェア感染で不正決済のリスク"}, {"date": "2026/01/15", "media": "ITmedia NEWS", "title": "ドコモ装う不正アプリ「dアップグレード」に注意 d払いの不正利用やパスワード窃取のおそれ"}, {"date": "2026/01/15", "media": "INTERNET Watch", "title": "NTTドコモ、不正アプリ「dアップグレード」に注意喚起、個人情報などの窃取や不正決済のリスクも"}, {"date": "2026/01/09", "media": "日経クロステック", "title": "【日本的スマホ論】2026年の携帯料金競争、値上げラッシュで忘れ去られた「お試し割」から占う"}, {"date": "2026/01/08", "media": "朝日新聞 朝刊", "title": "特殊詐欺で1900万円被害 ／⻘森県"}, {"date": "2026/01/06", "media": "日経クロステック", "title": "【モバイル一刀両断】楽天携帯が1000万回線突破、気になる設備投資減少 当面はいばらの道か"}, {"date": "2026/01/06", "media": "日経クロステック", "title": "【クマ被害、テックで防げ】スズキとドコモ、クマ対策「モンスターウルフ」に一役 狙うは自律走行"}, {"date": "2025/12/26", "media": "朝日新聞 朝刊", "title": "楽天モバイル、1000万回線突破 価格据え置き奏功、赤字は続く"}, {"date": "2025/12/25", "media": "日本経済新聞電子版", "title": "携帯乗り換え獲得競争、再び過熱 値上げや新プランで25年2桁増"}, {"date": "2025/12/24", "media": "ケータイ Watch", "title": "ドコモ契約の「YouTube Premium」の不具合が解消"}, {"date": "2025/12/20", "media": "ITmedia Mobile", "title": "「ドコモSMTBネット銀行」で何が変わる？ ドコモのサービス連携でdポイントがお得にたまり、解約抑止につなげる"}, {"date": "2025/12/13", "media": "プレジデントオンライン", "title": "「解約しても1年内に半数が舞い戻る」会員6億人超Spotifyの客の心を握り続けガッポリ儲ける天才的”設計”"}, {"date": "2025/12/11", "media": "日経クロステック", "title": "【ニュース解説】NTT系、耳塞がない集音器 軽度な聞こえ障害を解決"}, {"date": "2025/12/10", "media": "朝日新聞 朝刊", "title": "iPhone、圏外でも衛星通信でメッセージ"}, {"date": "2025/12/09", "media": "共同通信ニュース", "title": "企業、地震被害確認急ぐ―販売や生産拠点"}, {"date": "2025/12/09", "media": "CNET Japan", "title": "ドコモ「ひかりTV」が値上げ 電気代の高騰などが理由"}, {"date": "2025/12/09", "media": "ITmedia NEWS", "title": "iPhoneで「衛星通信のメッセージ」、日本でも解禁 圏外エリアでも送受信OK 当面無料"}, {"date": "2025/12/08", "media": "ITmedia NEWS", "title": "ドコモ、「ひかりTV」を値上げ、3月から 基本プランは1100円→1210円に"}, {"date": "2025/12/08", "media": "ITmedia Mobile", "title": "ドコモ、「ひかりTV」「ひかりTV for docomo」を値上げ 2026年3月から"}, {"date": "2025/12/08", "media": "ケータイ Watch", "title": "ドコモ、「ひかりTV」、「ひかりTV for docomo」の利用料金を値上げ 来年3月〜"}, {"date": "2025/12/08", "media": "AV Watch", "title": "ドコモ、「ひかりTV」月額料金を値上げ。3月から月額1210円"}, {"date": "2025/12/08", "media": "リシード", "title": "東北大が外国人留学生の学費値上げ、こどもDX推進へ72億円…教育業界ニュースまとめ読み"}, {"date": "2025/12/08", "media": "プレジデントオンライン", "title": "「0800」から始まる怪しい番号から着信が…日本人の資産を狙った「詐欺電話」を撃退する最新のスマホアプリ"}, {"date": "2025/12/05", "media": "CNET Japan", "title": "ドコモ、dアカウントの「プッシュ通知でログイン」廃止 パスキーへ移行"}, {"date": "2025/12/03", "media": "日本経済新聞電子版", "title": "詐欺メール、官⺠で抑止 携帯4社が「通信の秘密」含む情報提供"}, {"date": "2025/12/01", "media": "日本経済新聞電子版", "title": "楽天モバイル、オレオレ詐欺対策保険 高齢者向けに最大60万円補償"}, {"date": "2025/12/01", "media": "ITmedia NEWS", "title": "ドコモの動画配信「Lemino」、有料プラン「Leminoプレミアム」を値上げ 月額990円→月額1540円に"}, {"date": "2025/12/01", "media": "ITmedia Mobile", "title": "「au PAY」、通信障害時も支払い可能に 「オフラインコード支払い」機能提供"}, {"date": "2025/12/01", "media": "ITmedia Mobile", "title": "「Leminoプレミアム」が2026年2月から550円値上げ ドコモとの直接契約では月額990円→1540円に"}, {"date": "2025/12/01", "media": "ITmedia Mobile", "title": "ドコモが「あんしん遠隔サポート」の月額料金を220円値上げ 単体契約時は440円から660円に"}, {"date": "2025/12/01", "media": "ケータイ Watch", "title": "ドコモ、「Leminoプレミアム」や「あんしん遠隔サポート」を値上げ。26年2月から"}, {"date": "2025/12/01", "media": "AV Watch", "title": "ドコモの動画配信「Leminoプレミアム」値上げ。26年2月から1540円に"}, {"date": "2025/11/28", "media": "日経クロステック", "title": "【トラブルからの脱出】始業後に監視用サーバーとの通信が不調に、原因は1つではなかった"}, {"date": "2025/11/28", "media": "business network．jp", "title": "全通信事業者に対応、Wi-Fiで圏外エリアをカバー ソフトバンクがドローン遭難者捜索システムを実証"}, {"date": "2025/11/28", "media": "Business Insider Japan PREMIUM", "title": "今さら聞けない「パスキー」の詳細：詐欺抑止に金融業界でも普及。野村證券では29日から必須化"}, {"date": "2025/11/27", "media": "産経新聞 東京朝刊", "title": "携帯電話障害時 緊急通報可能に 来年3月にも"}, {"date": "2025/11/27", "media": "産経新聞 大阪朝刊", "title": "携帯電話障害時、緊急通報可能に 来年3月にも"}, {"date": "2025/11/26", "media": "共同通信ニュース", "title": "携帯障害、緊急通報可能の新制度―来年3月にも、各社が相互開放"}, {"date": "2025/11/26", "media": "ケータイ Watch", "title": "ドコモ料金未納→解約なら「dポイント」利用不可に、12月〜"}, {"date": "2025/11/24", "media": "日本経済新聞電子版", "title": "スマホとAIが個人情報奪う恐れ 通話の振動で盗聴、持病や体重も－カッサンドラの絶景"}, {"date": "2025/11/22", "media": "日本経済新聞電子版", "title": "衛星で「スマホ圏外ゼロ」 空を舞台にインフラ競う"}, {"date": "2025/11/20", "media": "ITmedia Mobile", "title": "据え置き型Wi-Fiルーター“実質無料”うのみは禁物 急増するトラブル原因は何か、家電量販店などで実態確認"}, {"date": "2025/11/19", "media": "日経クロステック", "title": "【モバイル一刀両断】営業減益で苦境が続くドコモ、販促費積み増しは無駄に見えて仕方がない"}, {"date": "2025/11/19", "media": "CNET Japan", "title": "NTTドコモ、「dアニメストア」を月額660円に値上げ 26年2月から"}, {"date": "2025/11/19", "media": "ITmedia NEWS", "title": "「dアニメストア」、利用料金を値上げ 月額550円→月額660円に 「サービスの向上のため」"}, {"date": "2025/11/19", "media": "ITmedia Mobile", "title": "「dアニメストア」が2026年2月から110円値上げ 月額660円に（Google Play／App Store決済は月額760円）"}, {"date": "2025/11/19", "media": "AV Watch", "title": "「dアニメストア」2026年2月から月額660円に値上げ。App Store／GooglePlay経由の契約者は760円"}, {"date": "2025/11/18", "media": "ScanNetSecurity", "title": "Amazon を装ったフィッシング詐欺メールによる被害を防ぐ 3 ポイント"}, {"date": "2025/11/17", "media": "ITmedia NEWS", "title": "国内カード10社、共同でフィッシング詐欺に注意喚起 メールなど送信も「個人情報の入力は求めません」"}, {"date": "2025/11/17", "media": "ケータイ Watch", "title": "クレカ大手10社とJCCA、フィッシング注意喚起を一⻫実施 被害が過去最大に"}, {"date": "2025/11/13", "media": "ITmedia Mobile", "title": "楽天モバイルは「MNP純増」に 他社プランの「値上げ」などが寄与"}, {"date": "2025/11/11", "media": "ケータイ Watch", "title": "ドコモの「d払い」、Amazonで注文未完了などの不具合"}, {"date": "2025/11/07", "media": "東京読売新聞 朝刊", "title": "ドコモ苦戦 14％減益 通信品質に難 顧客流出 9月中間"}, {"date": "2025/11/07", "media": "産経新聞 東京朝刊", "title": "携帯3社、軒並み増収 ドコモはコスト増で減益"}, {"date": "2025/11/07", "media": "産経新聞 大阪朝刊", "title": "携帯3社 軒並み増収 ドコモはコスト増で減益"}, {"date": "2025/11/07", "media": "ITmedia Mobile", "title": "5Gが好調のau、料金値上げが好循環に 課題の金融事業は「マネ活プラン」強化でてこ入れ 決算会見で語られたこと"}, {"date": "2025/11/05", "media": "CNET Japan", "title": "ソフトバンク社長、楽天モバイルの値上げしない宣言を「アンフェア」と批判 その理由とは"}, {"date": "2025/11/05", "media": "ITmedia Mobile", "title": "「ソフトバンクはどこかで値上げに踏み切る」と宮川社長 中長期的な視点から値上げを検討"}, {"date": "2025/11/05", "media": "ITmedia Mobile", "title": "楽天モバイルの値上げしない発言に、「アンフェアだ」とソフトバンク宮川社長 一体なぜ？"}, {"date": "2025/11/05", "media": "ケータイ Watch", "title": "NTTドコモ第2四半期は増収減益、「ドコモMAX」の拡充と「ネットワーク品質」改善で利益改善を図る"}, {"date": "2025/11/04", "media": "ITmedia Mobile", "title": "NTTドコモとWOWOWがタッグ、共同でコンテンツを調達・制作 過去の「NOTTV撤退経験」生かせるか注目"}, {"date": "2025/11/04", "media": "ITmedia Mobile", "title": "ドコモ社長「iPhone通信不能になった」eSIMトラブルを謝罪 「対応が必ずしも十分ではなかった」"}, {"date": "2025/11/04", "media": "日経クロステック", "title": "【ニュース】NTTドコモ4〜9月期決算は増収減益、法人向け好調もコンシューマーが苦戦"}, {"date": "2025/10/27", "media": "＠IT", "title": "⻄松建設が「IOWNとローカル5G」で実現した、建設機械「超遠隔操作」の低遅延ネットワーク"}, {"date": "2025/10/27", "media": "ケータイ Watch", "title": "「d払い」で障害、利用可能額が正しく表示されず"}, {"date": "2025/10/26", "media": "日本経済新聞電子版", "title": "ソニーXperiaの不具合回収「リスク評価甘かった」 再発防止へ総点検－サーチライト"}, {"date": "2025/10/25", "media": "日本経済新聞電子版", "title": "スマホ衛星通信、ドコモ・ソフトバンク参入 スターリンクで圏外なく"}, {"date": "2025/10/25", "media": "ITmedia Mobile", "title": "「モバイルバッテリー」に関する事故が増加傾向 どう付き合っていけばいい？"}, {"date": "2025/10/25", "media": "週刊東洋経済", "title": "【特集 新章NTT】－第2章 飽和する国内通信市場－シェア縮小と品質問題に苦しむ 稼ぎ頭ドコモの悩み"}, {"date": "2025/10/24", "media": "日本経済新聞電子版", "title": "NTTの「IOWN」が香港進出 光で低遅延の通信、金融機関にニーズ"}, {"date": "2025/10/22", "media": "Business Insider Japan PREMIUM", "title": "朝のコーヒーから証券取引まで、AWSの障害が人々に与えた影響"}, {"date": "2025/10/21", "media": "CNET Japan", "title": "（復旧）ドコモの「d払い」で障害、ログインやバーコード表示に影響"}, {"date": "2025/10/21", "media": "CNET Japan", "title": "ドコモ、通信障害を撤回（更新）"}, {"date": "2025/10/21", "media": "ITmedia NEWS", "title": "d払いで障害発生中 一部機能利用しづらく ランチタイム直撃、利用者は困惑【復旧済み】"}, {"date": "2025/10/21", "media": "ケータイ Watch", "title": "ドコモで通信障害、ネット接続は利用可"}, {"date": "2025/10/21", "media": "ケータイ Watch", "title": "ドコモの障害が復旧、d払いやドコモメールなど"}, {"date": "2025/10/19", "media": "ITmedia Mobile", "title": "値上げが続く、携帯キャリアの事務手数料まとめ【2025年10月版】：契約事務手数料を節約する方法も解説"}, {"date": "2025/10/15", "media": "大阪読売新聞 朝刊", "title": "次世代の健康技術 種まき シーテック開幕 医療・障害者支援 見据え"}, {"date": "2025/10/14", "media": "ケータイ Watch", "title": "ドコモ「Galaxy S25／S25 Ultra」がAndroid 16に、「5G＋」表示やHPUE対応・ドコモ絵文字廃止も"}, {"date": "2025/10/13", "media": "日本経済新聞電子版", "title": "スマホ料金値上げに備える 家族で契約見直し、効果大"}, {"date": "2025/10/11", "media": "ITmedia Mobile", "title": "ドコモ販売ランキング：「iPhone 17」が初の首位も、「iPhone Air」がトップ10圏外に【9月29日〜10月5日】"}, {"date": "2025/10/10", "media": "日本経済新聞電子版", "title": "今日の株価材料（新聞など、10日）ファストリ、今期純利益微増 米で本格値上げ"}, {"date": "2025/10/10", "media": "ITmedia NEWS", "title": "ツイートは「著作物」、地裁がスクショ無断転載に賠償命令 過去には控訴審で“引用”焦点の逆転も"}, {"date": "2025/10/09", "media": "東京読売新聞 朝刊", "title": "1680万円詐欺被害＝福島"}, {"date": "2025/10/09", "media": "NHKニュース", "title": "台風22号 通信各社の電話やネットに障害 ケーブルなどが損傷か 本格復旧に時間も"}, {"date": "2025/10/09", "media": "ITmedia Mobile", "title": "ドコモの「爆アゲ セレクション」還元率が5〜15％にダウン MAXプランはほぼ据え置き"}, {"date": "2025/10/09", "media": "東洋経済オンライン", "title": "「障害者雇用率」が高い企業ランキングTOP100"}, {"date": "2025/10/04", "media": "共同通信ニュース", "title": "ブログ、終了や値上げの波―維持コスト増、広告収入減 Xや動画に移行"}, {"date": "2025/10/04", "media": "ITmedia Mobile", "title": "楽天モバイルが“値上げできない”理由 低価格と相反するネットワーク改善では難しいかじ取りも"}, {"date": "2025/10/03", "media": "Business Insider Japan PREMIUM", "title": "楽天モバイルが値上げしづらい「シンプルな料金プラン」という呪縛。U-NEXT連携は苦肉の策か"}, {"date": "2025/10/02", "media": "ケータイ Watch", "title": "ドコモ、「爆アゲ セレクション」Spotify Premiumを値上げ 12月から月額1080円に"}, {"date": "2025/10/02", "media": "ITmedia NEWS", "title": "「NHK ONE」登録不具合が解消 原因は「新規ドメインからの大量送信」"}, {"date": "2025/10/01", "media": "CNET Japan", "title": "新サービス「NHK ONE」初日に不具合－－認証コード届かず 原因調査中"}, {"date": "2025/10/01", "media": "ITmedia NEWS", "title": "きょうスタート「NHK ONE」登録で不具合 Gmailなどに認証コード届かず"}, {"date": "2025/10/01", "media": "ITmedia Mobile", "title": "楽天モバイルは値上げせず、三木谷氏が宣言 なぜ「低価格×無制限」を維持できる？"}, {"date": "2025/10/01", "media": "ITmedia Mobile", "title": "10月1日サービス開始の「NHK ONE」でトラブル 認証コードを記載したメールが「Gmail」「ドコモメール」「auメール」などに届かず"}, {"date": "2025/10/01", "media": "Business Insider Japan PREMIUM", "title": "楽天モバイルの三木谷会長「値上げしない宣言」の背景。逆張り戦略で悲願の1000万回線へ"}, {"date": "2025/09/26", "media": "東京読売新聞 朝刊", "title": "秋の交通安全 呼びかけ 運転中スマホ 危険性を説明 金沢中署とドコモ＝石川"}, {"date": "2025/09/25", "media": "朝日新聞 朝刊", "title": "消えゆくブログサイト アクセス数3分の1に、運営撤退相次ぐ"}, {"date": "2025/09/25", "media": "⻄部読売新聞 朝刊", "title": "3700万円相当の詐欺被害＝福岡"}, {"date": "2025/09/25", "media": "ITmedia NEWS", "title": "住信SBIネット銀、上場廃止 ドコモによる買収で"}, {"date": "2025/09/24", "media": "時事通信ニュース", "title": "住信SBIネット銀、25日に上場廃止＝ドコモの買収成立で"}, {"date": "2025/09/23", "media": "東京読売新聞 朝刊", "title": "詐欺対策にAI活用要請 総務省 「なりすましメール」後絶たず"}, {"date": "2025/09/22", "media": "CNET Japan", "title": "ドコモeSIM障害、事務手数料の払い戻しを発表 一部ユーザー対象"}, {"date": "2025/09/22", "media": "ITmedia NEWS", "title": "ドコモ、eSIMトラブルで謝罪 SIM再発行手数料を一部返金へ"}, {"date": "2025/09/22", "media": "ITmedia NEWS", "title": "ドコモのeSIMトラブルは「eSIM専用端末の発売も一つの要因」 新型iPhone発売が影響か"}, {"date": "2025/09/22", "media": "ITmedia Mobile", "title": "相次ぐ携帯電話の「事務手数料」値上げは善か悪か――携帯電話ショップの店員はどう考えている？"}, {"date": "2025/09/22", "media": "ITmedia Mobile", "title": "ドコモ、スマホの実質負担額を多数値上げ iPhone 16／16e、Pixel 9a／10、Galaxy S25／S25Ultraなどが対象"}, {"date": "2025/09/22", "media": "ITmedia Mobile", "title": "ドコモの開通不具合、「eSIM専用端末の発売も一因」 返金対応も"}, {"date": "2025/09/22", "media": "PC Watch", "title": "ドコモ、eSIM障害によるSIM再発行手数料を返金"}, {"date": "2025/09/22", "media": "ケータイ Watch", "title": "ドコモ、「eSIM」障害で手数料無料に"}, {"date": "2025/09/20", "media": "日本経済新聞電子版", "title": "NTTドコモ、eSIM手続きに一時不具合 iPhone17契約に影響"}, {"date": "2025/09/20", "media": "CNET Japan", "title": "ドコモ、iPhone 17シリーズ販売再開へ 午前10〜11時頃に－－eSIM障害は「設備故障」が原因"}, {"date": "2025/09/20", "media": "CNET Japan", "title": "ドコモ、iPhone 17シリーズ販売停止 eSIMが開通しづらい障害で（更新）午前10〜11時に再開へ"}, {"date": "2025/09/20", "media": "ITmedia NEWS", "title": "ドコモ、「iPhone 17」などの販売を再開 eSIM障害から復旧"}, {"date": "2025/09/19", "media": "日経クロステック", "title": "【日本的スマホ論】ソフトバンクが「ワイモバイル」で値上げ、メインブランドの新料金はどうなる"}, {"date": "2025/09/19", "media": "ITmedia NEWS", "title": "ドコモ、「iPhone 17」などの販売を停止 eSIM開通トラブルを受け"}, {"date": "2025/09/19", "media": "ITmedia NEWS", "title": "ドコモ、eSIMでトラブル 開通しづらい状態に 「新型iPhone」発売が影響か"}, {"date": "2025/09/19", "media": "ITmedia Mobile", "title": "ドコモが「iPhone 17／Air」の販売を停止 eSIM開通できず通信できない問題受け"}, {"date": "2025/09/19", "media": "ケータイ Watch", "title": "ドコモの「eSIM」開通で障害、19日夕〜"}, {"date": "2025/09/17", "media": "時事通信ニュース", "title": "携帯各社、じわり値上げ＝「官製値下げ」から局面変化"}, {"date": "2025/09/17", "media": "時事通信ニュース", "title": "携帯各社、じわり値上げ＝「官製値下げ」から局面変化"}, {"date": "2025/09/16", "media": "日経クロステック", "title": "【記者の眼】値上げに加え「縛り契約」に近い端末販売も、官製値下げから反転した携帯大手"}, {"date": "2025/09/10", "media": "日経クロステック", "title": "【モバイル一刀両断】ソフトバンクもワイモバイルで実質値上げ 頑張ったが、経済圏のごり押しは難しい"}, {"date": "2025/09/06", "media": "ITmedia Mobile", "title": "ソフトバンクがY!mobileの“全面的な値上げ”に踏み込まなかった理由 板挟みの競争環境で打ち出した戦術"}, {"date": "2025/09/04", "media": "日本経済新聞電子版", "title": "ソフトバンク、「ワイモバイル」実質3％値上げ ドコモ・KDDIに追随"}, {"date": "2025/09/04", "media": "産経新聞 東京朝刊", "title": "【卓球】24年度は1億円赤字"}, {"date": "2025/09/04", "media": "産経新聞 大阪朝刊", "title": "【卓球】24年度は1億円赤字 Tリーグ"}, {"date": "2025/09/04", "media": "ケータイ Watch", "title": "「ワイモバイルの新料金」は値上げも割引と機能を拡充、寺尾氏が話す理由と狙い"}, {"date": "2025/09/03", "media": "NHKニュース", "title": "携帯大手 サービス強化しつつ基本料金値上げの動き相次ぐ サービス維持のコスト増で"}, {"date": "2025/09/02", "media": "ケータイ Watch", "title": "d払いで銀行口座登録ができない不具合"}, {"date": "2025/08/29", "media": "日本経済新聞電子版", "title": "NTTデータG、臨時総会で株式併合可決 9月26日上場廃止"}, {"date": "2025/08/28", "media": "日本経済新聞電子版", "title": "IIJ、ドコモとKDDIの回線に接続できるSIM 1枚で障害対応"}, {"date": "2025/08/27", "media": "日経クロステック", "title": "【モバイル一刀両断】販促費増加で苦しむドコモ、値上げで実を取りにきたKDDI 楽天はチャンス到来か"}, {"date": "2025/08/27", "media": "産経新聞 東京朝刊", "title": "携帯大手 脱低価格競争 KDDI、値上げ／SBは手数料増額"}, {"date": "2025/08/27", "media": "産経新聞 大阪朝刊", "title": "携帯大手、脱低価格競争 KDDI、値上げ／SB、手数料増額"}, {"date": "2025/08/27", "media": "PC Watch", "title": "一歩誤れば火災になるバッテリ入り小型家電。正しい処分方法をまとめてみた"}, {"date": "2025/08/22", "media": "東京読売新聞 朝刊", "title": "携帯 値上げVS据え置き コスト増 戦略割れる"}, {"date": "2025/08/21", "media": "日本経済新聞電子版", "title": "アイフルが店舗全廃、スマホ借り入れで客減少 メルカリやLINEも台頭"}, {"date": "2025/08/21", "media": "朝日新聞 夕刊", "title": "炎天下、うだるスマホ 充電・長時間使用で「熱中症」、発火の危険も"}, {"date": "2025/08/17", "media": "東京読売新聞 朝刊", "title": "カターレ選手とサッカー！ 発達障害の子向け教室＝富山"}, {"date": "2025/08/16", "media": "ITmedia Mobile", "title": "ドコモ販売ランキング：iPhone 16が返り咲き、折りたたみGalaxyはすべて圏外に【8月4日〜8月10日】"}], "pos_items": [{"date": "2026/08/10", "media": "日本経済新聞電子版", "title": "JEITA、6月の携帯電話国内出荷実績を発表"}, {"date": "2026/08/08", "media": "共同通信ニュース", "title": "役所への電話、AIが取り次ぎ―東北初導入、宮城県岩沼市"}, {"date": "2026/08/08", "media": "ITmedia Mobile", "title": "交通系ICカード“非対応”自動改札機の実証開始 タッチ決済やQRコード乗車の「入れない」「出られない」の解消につながるか？"}, {"date": "2026/08/07", "media": "ZDNet Japan", "title": "NTTデータG、2026年度第1四半期は増収増益の好発進－－AI・データセンター投資を加速"}, {"date": "2026/08/07", "media": "ITmedia Mobile", "title": "IIJ谷脇社長「JALモバイル powered by ahamoの大きな影響はない」 IIJmioのJALモバイルは7月も好調"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "IIJの26年度1Qは増収増益、「IIJmio」は145万回線超に"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "ドコモとKDDIの「Galaxy Z Fold8 Ultra／Fold8／Flip8」、発売初日にソフト更新"}, {"date": "2026/08/07", "media": "RBB TODAY", "title": "【回線速度】10G回線速度ランキング、コミュファ光10Gが中央値・平均ともに首位クラス、地域限定サービスが安定性で圧倒…2026年6月集計"}, {"date": "2026/08/06", "media": "時事通信ニュース", "title": "〔決算〕NTT、4〜6月期増収増益＝法人・金融事業がけん引"}, {"date": "2026/08/06", "media": "CNET Japan", "title": "ドコモ、「空からの通信」拡大－－Starlink Directは650万接続、9月に能登で気球型HAPS実証"}, {"date": "2026/08/06", "media": "ITmedia NEWS", "title": "ドコモ1Q、モバイル通信は減収続くが……金融好調、全社の増益エンジンに"}, {"date": "2026/08/06", "media": "ITmedia Mobile", "title": "ドコモが念願の増収増益に好転 「ドコモMAX」好調も後押し、今後は“ロイヤルユーザー”を重視"}, {"date": "2026/08/06", "media": "ITmedia Mobile", "title": "「iPhone 14」がトップ維持、「iPhone 15」が急上昇 ゲオの7月中古スマホランキング"}, {"date": "2026/08/06", "media": "INTERNET Watch", "title": "ニフティ、「NifMo」でeSIMの提供を開始。対象の光回線利用者には11カ月間月額770円割引のキャンペーン"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ第1四半期は増収増益、dカード・d払いなどが強力牽引 「ドコモMAX」は400万契約突破"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ27年3月期1Qは増収増益、「ドコモMAX」など好調"}, {"date": "2026/08/06", "media": "マイナビニュース", "title": "NTT、第1四半期は増収増益で過去最高 IOWNや分散GPUの取り組みを説明"}, {"date": "2026/08/06", "media": "マイナビニュース", "title": "NTTドコモ決算、第1四半期は増収増益 通信収入に底打ちの兆し、金融・AIを強化"}, {"date": "2026/08/06", "media": "business network．jp", "title": "NTTの1Q決算は増収増益 ドコモの「気球型HAPS」は9月から能登エリアで実証開始"}, {"date": "2026/08/06", "media": "Business Insider Japan", "title": "2026年8月、銀行「預金金利」ランキングTOP3。あおぞら銀行、普通金利を「1%」の大台に乗せる"}, {"date": "2026/08/05", "media": "日本経済新聞電子版", "title": "NTTドコモ、「dアニメストア for LINEマンガ」を開始"}, {"date": "2026/08/05", "media": "日経クロステック", "title": "【ニュース解説】セブンの「心変わり」、ソフトバンクなどと提携 共通ポイント業界に衝撃"}, {"date": "2026/08/05", "media": "日経クロステック", "title": "【AIインフラ最前線】AI活用で高まるセキュリティーリスク、パッチ作成の自動化など防御も強化へ"}, {"date": "2026/08/05", "media": "WIRED.jp", "title": "AIエージェントとは？ 基本から導入の利点まで徹底解説"}, {"date": "2026/08/05", "media": "ITmedia NEWS", "title": "SpaceX、IPO後初の決算で売上高92％増 AI設備投資158億ドルで「2030年には年商1兆ドルに」とマスクCEO"}, {"date": "2026/08/05", "media": "ITmedia Mobile", "title": "NifMoがeSIMを提供開始 登録手数料3300円が無料、光回線セットで770円×11カ月割引キャンペーン"}, {"date": "2026/08/04", "media": "東京読売新聞 朝刊", "title": "住信SBIネット銀→ドコモSMTBネット銀 社名変更 ドコモショップと連携強化"}, {"date": "2026/08/04", "media": "ITmedia Mobile", "title": "KDDIがauで「セカンドナンバー」を開始 月額550円で「もう1つの携帯番号を」"}, {"date": "2026/08/04", "media": "ケータイ Watch", "title": "ソフトバンクQ1決算は増収増益、セブン＆アイ提携や決済強化で社会インフラ企業へ"}, {"date": "2026/08/03", "media": "日経クロステック", "title": "【佐野正弘が斬る！ニュースなアプリの裏側】NTTドコモが安全性強化のモバイルバッテリー、求められるさらなる取り組み"}, {"date": "2026/08/03", "media": "日経ビジネス", "title": "特集－MUFG、未完の王者 時価総額1位、AI時代の金融進化論－PART2－周回遅れを「後出しじゃんけん」へ グーグル、OpenAIとタッグ エムットは「人生経済圏」"}, {"date": "2026/08/03", "media": "東洋経済オンライン", "title": "トップは約201億円！「生物多様性保全」に巨額を投じる企業ランキング…5位は中国電力、4位は富士フイルム、ではトップ3は？／"}, {"date": "2026/07/31", "media": "INTERNET Watch", "title": "住信SBIネット銀行改め「ドコモの銀行」、発表直後から大反響のとある機能とは？"}, {"date": "2026/07/31", "media": "クラウド Watch", "title": "中国電力とNTTドコモビジネス、火力発電所の巡視点検スマート化に向けた実証を開始"}, {"date": "2026/07/31", "media": "business network．jp", "title": "NTTドコモビジネス、サプライチェーンの脅威情報を通知する新機能を提供開始"}, {"date": "2026/07/31", "media": "business network．jp", "title": "ドコモ、エリクソンの大容量基地局装置「RAN Processor 6672」を商用導入"}, {"date": "2026/07/31", "media": "business network．jp", "title": "MEEQ、楽天モバイル回線を先行提供 ドコモ回線はeSIM提供開始"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "メルカリ、データ専用eSIMを提供開始 月額770円（4GB）〜"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "8月開始のd払いとdポイントキャンペーン、ジャズドリーム長島や資生堂オンラインでポイント還元"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "ドコモ「令和8年熊本地震支援募金」を受付開始、d払いやdポイントで寄付"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "ドコモFG、「金融AI」を秋に試験導入 家計や資産運用を助言"}, {"date": "2026/07/29", "media": "日経クロステック", "title": "【モバイル一刀両断】ドコモが金融を刷新強化、ホワイトレーベルでdカードやd払い提供する狙い"}, {"date": "2026/07/29", "media": "東京読売新聞 朝刊", "title": "ドコモFG 決済アプリ強化 広井社長 金融サービスなど集約"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "広井ドコモFG社長：金融サービス外販で経済圏拡大＝地銀などの顧客取り込み"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "金融サービス外販で経済圏拡大＝地銀などの顧客取り込み―広井ドコモFG社長"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "〔熊本地震影響〕ソフトバンクと楽天、他社回線接続サービス開始＝大手4社出そろう"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "日本通信が新ブランド「blue mobile」を発表 ネオキャリアで自由な通信環境へ"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "「eFootball」にdポイント導入、アイテム購入でたまる"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "日本通信、新ブランドの名称「blue mobile」発表 11月24日からサービス開始予定"}, {"date": "2026/07/28", "media": "ケータイ Watch", "title": "熊本県の地震を受け「JAPANローミング」開始、ドコモ・KDDIユーザー向け"}]};
+
+function fmt(n){ return n.toLocaleString("ja-JP"); }
+
+// ---- period label ----
+document.getElementById("periodLabel").textContent =
+  `集計期間: ${DATA.months[0]} 〜 ${DATA.months[DATA.months.length-1]}（${DATA.months.length}ヶ月分）／ 総露出件数 ${fmt(DATA.total)}件`;
+document.getElementById("footTotal").textContent = fmt(DATA.total);
+document.getElementById("negCount").textContent = fmt(DATA.neg_items.length);
+
+// ---- KPI row ----
+const posPct = (DATA.sentiment_counts.positive / DATA.total * 100).toFixed(1);
+const negPct = (DATA.sentiment_counts.negative / DATA.total * 100).toFixed(1);
+const neuPct = (DATA.sentiment_counts.neutral / DATA.total * 100).toFixed(1);
+const avgMonthly = Math.round(DATA.total / DATA.months.length);
+
+const kpis = [
+  {label:"総露出件数", value: fmt(DATA.total)+"件", sub:`月平均 約${fmt(avgMonthly)}件`, cls:""},
+  {label:"ポジティブ比率", value: posPct+"%", sub:`${fmt(DATA.sentiment_counts.positive)}件`, cls:"pos"},
+  {label:"ニュートラル比率", value: neuPct+"%", sub:`${fmt(DATA.sentiment_counts.neutral)}件`, cls:""},
+  {label:"ネガティブ比率", value: negPct+"%", sub:`${fmt(DATA.sentiment_counts.negative)}件`, cls:"neg"},
+];
+document.getElementById("kpiRow").innerHTML = kpis.map(k=>`
+  <div class="kpi ${k.cls}">
+    <div class="label">${k.label}</div>
+    <div class="value">${k.value}</div>
+    <div class="sub">${k.sub}</div>
+  </div>`).join("");
+
+// ---- monthly stacked bar chart ----
+(function(){
+  const svg = document.getElementById("monthlyChart");
+  const months = DATA.months;
+  const W = Math.max(760, months.length*70), H = 300;
+  const padL = 40, padR = 10, padT = 16, padB = 40;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const maxTotal = Math.max(...months.map(m=>DATA.monthly_counts[m]));
+  const bw = plotW / months.length * 0.62;
+  const gap = plotW / months.length;
+
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", H);
+
+  let html = "";
+  // gridlines
+  const steps = 4;
+  for(let s=0;s<=steps;s++){
+    const val = Math.round(maxTotal/steps*s);
+    const y = padT + plotH - (val/maxTotal)*plotH;
+    html += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
+    html += `<text x="${padL-8}" y="${y+4}" text-anchor="end" class="axis-label">${val}</text>`;
+  }
+
+  months.forEach((m,i)=>{
+    const x = padL + gap*i + (gap-bw)/2;
+    const s = DATA.monthly_sent[m];
+    const order = [["positive","var(--positive)"],["neutral","var(--neutral-tone)"],["negative","var(--negative)"]];
+    let yCursor = padT + plotH;
+    order.forEach(([key,color])=>{
+      const v = s[key];
+      const h = (v/maxTotal)*plotH;
+      yCursor -= h;
+      html += `<rect x="${x}" y="${yCursor}" width="${bw}" height="${h}" fill="${color}" rx="2"><title>${m} ${key}: ${v}件</title></rect>`;
+    });
+    const total = DATA.monthly_counts[m];
+    html += `<text x="${x+bw/2}" y="${padT+plotH-((total)/maxTotal)*plotH-6}" text-anchor="middle" class="bar-total-label">${total}</text>`;
+    html += `<text x="${x+bw/2}" y="${H-14}" text-anchor="middle" class="axis-label">${m.slice(2)}</text>`;
+  });
+
+  svg.innerHTML = html;
+})();
+
+// ---- media bars ----
+(function(){
+  const el = document.getElementById("mediaBars");
+  const max = Math.max(...DATA.top_media.map(x=>x[1]));
+  el.innerHTML = DATA.top_media.map(([name,count])=>`
+    <div class="media-bar-row">
+      <div class="media-bar-name" title="${name}">${name}</div>
+      <div class="media-bar-track"><div class="media-bar-fill" style="width:${(count/max*100).toFixed(1)}%"></div></div>
+      <div class="media-bar-val">${fmt(count)}</div>
+    </div>`).join("");
+})();
+
+// ---- donut chart ----
+(function(){
+  const svg = document.getElementById("donutChart");
+  const entries = Object.entries(DATA.media_type_counts).sort((a,b)=>b[1]-a[1]);
+  const total = entries.reduce((a,[,v])=>a+v,0);
+  const colors = ["var(--accent)","#8892A6","var(--positive)","var(--neutral-tone)","#C79A3E"];
+  const cx=110, cy=110, r=80, rInner=48;
+  let angle = -Math.PI/2;
+  let html = "";
+  entries.forEach(([name,val],i)=>{
+    const frac = val/total;
+    const a0 = angle;
+    const a1 = angle + frac*Math.PI*2;
+    angle = a1;
+    const x0 = cx + r*Math.cos(a0), y0 = cy + r*Math.sin(a0);
+    const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+    const xi0 = cx + rInner*Math.cos(a1), yi0 = cy + rInner*Math.sin(a1);
+    const xi1 = cx + rInner*Math.cos(a0), yi1 = cy + rInner*Math.sin(a0);
+    const large = (a1-a0) > Math.PI ? 1 : 0;
+    const path = `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${rInner},${rInner} 0 ${large} 0 ${xi1},${yi1} Z`;
+    html += `<path d="${path}" fill="${colors[i%colors.length]}"><title>${name}: ${val}件 (${(frac*100).toFixed(1)}%)</title></path>`;
+  });
+  html += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="20" font-weight="800">${fmt(total)}</text>`;
+  html += `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-size="11" fill="var(--muted)">total</text>`;
+  svg.innerHTML = html;
+
+  document.getElementById("donutLegend").innerHTML = entries.map(([name,val],i)=>`
+    <span><span class="dot" style="background:${colors[i%colors.length]}"></span>${name} ${(val/total*100).toFixed(1)}%</span>`).join("");
+})();
+
+// ---- overall sentiment bar ----
+(function(){
+  const svg = document.getElementById("sentBar");
+  const W = 900, H = 64;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width","100%");
+  const total = DATA.total;
+  const segs = [
+    ["positive", DATA.sentiment_counts.positive, "var(--positive)"],
+    ["neutral", DATA.sentiment_counts.neutral, "var(--neutral-tone)"],
+    ["negative", DATA.sentiment_counts.negative, "var(--negative)"],
+  ];
+  let x = 0;
+  let html = "";
+  segs.forEach(([key,val,color])=>{
+    const w = val/total*W;
+    html += `<rect x="${x}" y="16" width="${w}" height="30" fill="${color}"><title>${key}: ${val}件</title></rect>`;
+    if(w > 40){
+      html += `<text x="${x+w/2}" y="35" text-anchor="middle" font-size="12" fill="white" font-weight="700">${(val/total*100).toFixed(0)}%</text>`;
+    }
+    x += w;
+  });
+  svg.innerHTML = html;
+})();
+
+// ---- negative table ----
+(function(){
+  const tbody = document.querySelector("#negTable tbody");
+  tbody.innerHTML = DATA.neg_items.map(it=>`
+    <tr><td class="col-date">${it.date}</td><td class="col-media">${it.media}</td><td>${it.title}</td></tr>
+  `).join("");
+})();
+</script>

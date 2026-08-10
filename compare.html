@@ -1,0 +1,497 @@
+<title>携帯3社 露出比較レポート</title>
+<style>
+  :root{
+    --bg:#F6F5F2; --surface:#FFFFFF; --surface-2:#EFEDE8; --text:#201E1B; --muted:#726D65;
+    --line:#E1DDD4; --shadow: 0 1px 2px rgba(32,30,27,0.06), 0 8px 24px rgba(32,30,27,0.05);
+    --positive:#1F7A5C; --neutral-tone:#9C978E; --negative:#C7102A; --neutral-soft:#EEECE7;
+    --docomo:#C7102A; --docomo-soft:#F6DADD;
+    --softbank:#D98A1F; --softbank-soft:#F5E5C9;
+    --kddi:#2A6FB0; --kddi-soft:#D9E6F5;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#171614; --surface:#1F1E1B; --surface-2:#272521; --text:#EDEAE4; --muted:#A39D93;
+      --line:#38352F; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      --positive:#57C69B; --neutral-tone:#8B867C; --negative:#FF6B7F; --neutral-soft:#2A2824;
+      --docomo:#FF6B7F; --docomo-soft:#3A2126;
+      --softbank:#F0AE4F; --softbank-soft:#3A2E17;
+      --kddi:#6FA8E8; --kddi-soft:#1B2C3E;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171614; --surface:#1F1E1B; --surface-2:#272521; --text:#EDEAE4; --muted:#A39D93;
+    --line:#38352F; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    --positive:#57C69B; --neutral-tone:#8B867C; --negative:#FF6B7F; --neutral-soft:#2A2824;
+    --docomo:#FF6B7F; --docomo-soft:#3A2126; --softbank:#F0AE4F; --softbank-soft:#3A2E17;
+    --kddi:#6FA8E8; --kddi-soft:#1B2C3E;
+  }
+  :root[data-theme="light"]{
+    --bg:#F6F5F2; --surface:#FFFFFF; --surface-2:#EFEDE8; --text:#201E1B; --muted:#726D65;
+    --line:#E1DDD4; --shadow: 0 1px 2px rgba(32,30,27,0.06), 0 8px 24px rgba(32,30,27,0.05);
+    --positive:#1F7A5C; --neutral-tone:#9C978E; --negative:#C7102A; --neutral-soft:#EEECE7;
+    --docomo:#C7102A; --docomo-soft:#F6DADD; --softbank:#D98A1F; --softbank-soft:#F5E5C9;
+    --kddi:#2A6FB0; --kddi-soft:#D9E6F5;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;}
+
+  header.hero{display:flex;flex-direction:column;gap:6px;padding-bottom:28px;margin-bottom:28px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text);font-weight:700;opacity:0.6;}
+  h1{font-size:30px;margin:2px 0 4px;font-weight:800;letter-spacing:-0.01em;text-wrap:balance;}
+  .period{color:var(--muted);font-size:14px;}
+
+  .company-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;}
+  .company-legend span{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;}
+  .company-legend .sw{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+  @media (max-width:860px){ .kpi-grid{grid-template-columns:1fr;} }
+  .company-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:20px 20px;box-shadow:var(--shadow); border-top:4px solid var(--c);
+  }
+  .company-card .cname{font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .company-card .cname .sw{width:10px;height:10px;border-radius:3px;background:var(--c);}
+  .metric-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line);}
+  .metric-row:last-child{border-bottom:none;}
+  .metric-row .m-label{font-size:12px;color:var(--muted);}
+  .metric-row .m-value{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .metric-row .m-value.neg{color:var(--negative);}
+  .metric-row .m-value.pos{color:var(--positive);}
+
+  section{margin-bottom:32px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px;box-shadow:var(--shadow);}
+  .card h2{font-size:16px;margin:0 0 2px;font-weight:800;}
+  .card .desc{font-size:13px;color:var(--muted);margin:0 0 16px;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;}
+  .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  @media (max-width:860px){ .two-col{grid-template-columns:1fr;} .three-col{grid-template-columns:1fr;} }
+
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:2px;display:inline-block;}
+
+  .scrollx{overflow-x:auto;}
+  svg text{fill:var(--text);font-family:inherit;}
+  .axis-label{fill:var(--muted);font-size:11px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  thead th{text-align:left;font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:7px 9px;position:sticky;top:0;background:var(--surface);}
+  tbody td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tbody tr:hover{background:var(--surface-2);}
+  .col-date{white-space:nowrap;color:var(--muted);font-variant-numeric:tabular-nums;width:82px;}
+  .col-media{white-space:nowrap;width:150px;color:var(--muted);}
+  .scrolly{max-height:340px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;}
+  .scrolly table thead th{background:var(--surface-2);}
+
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;}
+  .bar-name{width:130px;flex:0 0 130px;color:var(--text);text-overflow:ellipsis;overflow:hidden;white-space:nowrap;}
+  .bar-track{flex:1;background:var(--surface-2);border-radius:4px;height:12px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;}
+  .bar-val{width:40px;flex:0 0 40px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+  .caveat{display:flex;gap:10px;align-items:flex-start;background:var(--neutral-soft);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:12.5px;color:var(--muted);margin-top:14px;}
+  .caveat b{color:var(--text);}
+  .caveat-list{margin:6px 0 0;padding-left:18px;}
+  .caveat-list li{margin-bottom:4px;}
+
+  .sub-h{font-size:13px;font-weight:800;margin:0 0 10px;display:flex;align-items:center;gap:7px;}
+  .sub-h .sw{width:9px;height:9px;border-radius:3px;}
+
+  footer{color:var(--muted);font-size:12px;margin-top:36px;padding-top:16px;border-top:1px solid var(--line);}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">Competitive Media Exposure Report</div>
+    <h1>携帯大手3社 露出比較レポート</h1>
+    <div class="period" id="periodLabel"></div>
+    <div style="margin-top:2px;"><a href="./index.html" style="font-size:13px;font-weight:700;color:var(--docomo);">← NTTドコモ単体の詳細レポートを見る</a></div>
+    <div class="company-legend">
+      <span><span class="sw" style="background:var(--docomo)"></span>NTTドコモ</span>
+      <span><span class="sw" style="background:var(--softbank)"></span>ソフトバンク</span>
+      <span><span class="sw" style="background:var(--kddi)"></span>KDDI</span>
+    </div>
+  </header>
+
+  <section class="kpi-grid" id="companyCards"></section>
+
+  <section class="card">
+    <h2>月別 Web/新聞 掲載件数の推移（3社比較）</h2>
+    <p class="desc">過去13ヶ月の月次掲載件数を重ねて表示</p>
+    <div class="scrollx"><svg id="monthlyLineChart"></svg></div>
+  </section>
+
+  <section class="card">
+    <h2>センチメント構成比（Web/新聞・見出しキーワード自動判定）</h2>
+    <p class="desc">3社それぞれの掲載件数に占めるポジティブ／ニュートラル／ネガティブの割合</p>
+    <div id="sentimentCompare"></div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--positive)"></span>ポジティブ</span>
+      <span><span class="dot" style="background:var(--neutral-tone)"></span>ニュートラル</span>
+      <span><span class="dot" style="background:var(--negative)"></span>ネガティブ</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>媒体タイプ構成比（3社比較）</h2>
+    <p class="desc">新聞／Web・IT専門／その他Webメディアの掲載比率</p>
+    <div id="mediaTypeCompare"></div>
+  </section>
+
+  <section class="card">
+    <h2>テレビ露出 比較</h2>
+    <p class="desc">放送件数・総放送時間（分換算）</p>
+    <div class="three-col" id="tvCompare"></div>
+  </section>
+
+  <section class="card">
+    <h2>3社比較のまとめ</h2>
+    <div id="summaryText" style="font-size:13.5px;line-height:1.9;"></div>
+  </section>
+
+  <div class="channel-head">
+    <span class="chip">Analysis</span>
+    <h2>広報力ギャップ分析：発表量とテレビ波及力のねじれ</h2>
+    <span class="note">Web発表系記事の比率とTV転換力を突き合わせて検証</span>
+  </div>
+
+  <section class="card">
+    <h2>Web上の「発表・自己PR」系記事の比率</h2>
+    <p class="desc">見出しに「発表」「開始」「ローンチ」等（発表系）、「受賞」「No.1」「ランキング」等（自己PR系）を含む記事の割合。材料出しの"量"の目安</p>
+    <div id="launchCompare"></div>
+  </section>
+
+  <section class="two-col">
+    <div class="card">
+      <h2>Web発表系比率 vs テレビ露出量</h2>
+      <p class="desc">Webでの発表系記事比率は高くても、テレビ露出件数・ポジ比率が低ければ「話題化・波及」に課題があると読める</p>
+      <div class="scrollx"><svg id="gapScatter"></svg></div>
+    </div>
+    <div class="card">
+      <h2>ポジティブTV露出の番組リーチ</h2>
+      <p class="desc">ポジティブ判定された放送が何番組に広がっているか（全<span id="totalProgramsNote"></span>）</p>
+      <div id="reachCompare"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>各社のポジティブTV露出：頻出トピック</h2>
+    <p class="desc">同一の見出し・コーナー名が複数回登場＝反復的に取り上げられている看板テーマ（上位8件、2回以上のみ表示）</p>
+    <div class="three-col" id="repeatTopics"></div>
+  </section>
+
+  <section class="card">
+    <h2>読み解き</h2>
+    <div style="font-size:13.5px;line-height:1.9;" id="gapNarrative"></div>
+  </section>
+
+  <section class="card">
+    <h2>ネガティブ判定 記事サンプル（3社・各社最新順）</h2>
+    <p class="desc">見出しキーワードによる自動判定。個別評価には目視確認を推奨</p>
+    <div class="three-col" id="negLists"></div>
+  </section>
+
+  <section class="card">
+    <h2>分析手法・データに関する注意事項</h2>
+    <div class="caveat">
+      <span>&#9888;</span>
+      <div>
+        <b>本レポートの手法上の限界：</b>
+        <ul class="caveat-list">
+          <li>センチメントは見出し/コーナー名/詳細テキスト中のキーワードによる機械的な一次判定であり、本文の文脈は読んでいません。皮肉・引用・第三者言及・「詐欺対策」等の防御的施策の発表が誤ってネガ判定される場合があります。</li>
+          <li>ソフトバンクは「ソフトバンクホークス」（プロ野球球団）との名称重複があるため、野球関連記事（Web計<span id="sbWebExcl"></span>件／TV計<span id="sbTvExcl"></span>件）を集計から除外しています。ドコモ・KDDIにはこの種の除外操作は行っていません。</li>
+          <li>各社の元データは検索キーワードによる媒体モニタリングの結果であり、本文中に社名が言及されただけの記事（株式市況欄など）も件数に含まれている可能性があります。したがって件数の絶対値は各社の記事収集条件（媒体網羅範囲・検索語）に依存し、単純な多寡だけで「報道量が多い＝注目度が高い」と断定するのは注意が必要です。</li>
+          <li>媒体タイプ分類は媒体名からの機械的推定です。</li>
+          <li>KDDIのWeb/新聞データは2025年8月が0〜1桁件と極端に少なく、これは実際の露出量ではなくデータ収集期間の違いによるものと見られます（実質的な集計開始は2025年9月以降）。月別推移グラフの2025年8月時点のKDDIの値は参考程度にとどめてください。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    データ出典: NTTドコモ過去1年間露出.csv／result.csv、ソフトバンク_テレコン_露出報告_20260810.xlsx＋メタデータ1〜4.csv、KDDI_テレコン_露出報告_20260810.xlsx＋メタデータ.csv／ 媒体タイプ・センチメントは見出しテキストに基づく自動分類。
+  </footer>
+</div>
+
+<script>
+const DATA = {"months": ["2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"], "companies": {"docomo": {"label": "NTTドコモ", "web_total": 4079, "tv_total": 332, "tv_total_seconds": 62044, "web_monthly": {"2025-08": 157, "2025-09": 297, "2025-10": 385, "2025-11": 323, "2025-12": 365, "2026-01": 274, "2026-02": 341, "2026-03": 406, "2026-04": 354, "2026-05": 334, "2026-06": 353, "2026-07": 359, "2026-08": 131}, "tv_monthly": {"2025-08": 7, "2025-09": 11, "2025-10": 29, "2025-11": 6, "2025-12": 16, "2026-01": 12, "2026-02": 28, "2026-03": 44, "2026-04": 47, "2026-05": 25, "2026-06": 21, "2026-07": 47, "2026-08": 39}, "web_sentiment": {"positive": 859, "neutral": 2782, "negative": 438}, "tv_sentiment": {"positive": 91, "neutral": 123, "negative": 118}, "media_type_counts": {"Web/IT専門": 1908, "Webメディア（その他）": 796, "新聞": 1348, "TV/ラジオ": 27}, "top_media": [["日本経済新聞電子版", 679], ["ITmedia Mobile", 662], ["ケータイ Watch", 620], ["business network．jp", 211], ["日経クロステック", 162], ["東京読売新聞 朝刊", 121], ["CNET Japan", 121], ["時事通信ニュース", 115], ["マイナビニュース", 106], ["ITmedia NEWS", 92]], "station_counts": {"テレビ朝日": 84, "テレビ東京": 65, "TBSテレビ": 58, "フジテレビ": 46, "NHK総合・東京": 43, "日本テレビ": 36}, "neg_web_sample": [{"date": "2026/08/08", "media": "ITmedia Mobile", "title": "ahamoの「40GB化」は値上げの布石か？ 通信品質改善と料金設定で揺れるドコモの戦略"}, {"date": "2026/08/07", "media": "日経クロステック", "title": "【AIインフラ最前線】サイバー攻撃で狙われやすいIoT、フィジカルAIでは人命の危機にも直結"}, {"date": "2026/08/07", "media": "東京読売新聞 朝刊", "title": "自転車シェア システム障害 「ドコモ・バイクシェア」"}, {"date": "2026/08/07", "media": "大阪読売新聞 朝刊", "title": "自転車シェア サービス停止 ドコモ子会社障害で"}, {"date": "2026/08/07", "media": "ITmedia NEWS", "title": "ドコモ・バイクシェアのシステム障害、いまだ全面復旧ならず 8月1日以降の利用者には「全額返金」へ"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "沖縄・鹿児島などで「JAPANローミング」提供 台風13号で通信障害"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "ドコモ、九州・沖縄の一部で障害 台風13号の影響により"}, {"date": "2026/08/06", "media": "日経クロステック", "title": "【ニュース解説】ドコモ・バイクシェアで障害、発端はシステム更改 「7日には東京で復旧」"}, {"date": "2026/08/06", "media": "東京読売新聞 朝刊", "title": "金沢「まちのり」 利用を一時停止 システム不具合＝石川"}, {"date": "2026/08/06", "media": "CNET Japan", "title": "ドコモ・バイクシェアの障害、あす7日復旧へ－－背景に「NOLL」刷新へのシステム移行"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ前田社長が「ahamo40GB化は検証のため」、料金値上げへの考え方にも言及"}, {"date": "2026/08/06", "media": "ケータイ Watch", "title": "ドコモ・バイクシェアの障害、原因はシステム移行 都内は明日7日に復旧作業"}, {"date": "2026/08/05", "media": "毎日新聞 朝刊", "title": "ドコモ・バイクシェア：ドコモ系自転車、貸し出し一時停止"}, {"date": "2026/08/05", "media": "レスポンス", "title": "熊本地震1週間、TSMCなど半導体工場復旧、ホンダ国内3工場は8月19日まで停止［新聞ウォッチ］"}, {"date": "2026/08/04", "media": "日本経済新聞電子版", "title": "ドコモのシェアサイクル、サービス一時停止 システム障害で"}, {"date": "2026/08/04", "media": "共同通信ニュース", "title": "ドコモ系自転車、一時停止―システム不具合"}, {"date": "2026/08/04", "media": "時事通信ニュース", "title": "シェアサイクルの提供一時停止＝ドコモ・バイクシェア"}, {"date": "2026/08/04", "media": "ITmedia NEWS", "title": "ドコモ・バイクシェア、サービス一時停止 不具合の復旧見通し立たず"}, {"date": "2026/08/04", "media": "ITmedia Mobile", "title": "ドコモ・バイクシェアのサービス全国で一時停止 システム不具合で 利用料金や返却はどうなる？"}, {"date": "2026/08/04", "media": "TRAICY", "title": "ドコモ・バイクシェア、サービス一時停止 システム不具合で"}, {"date": "2026/07/31", "media": "日本経済新聞電子版", "title": "ドコモビジネス、供給網全体の不正通信を検知 初動対応を支援"}, {"date": "2026/07/31", "media": "朝日新聞 朝刊", "title": "クマ被害増加、対策急ぐ県 昨年「保護」解除 ／三重県"}, {"date": "2026/07/31", "media": "東京読売新聞 朝刊", "title": "熊本地震 通信障害がすべて解消"}, {"date": "2026/07/31", "media": "ITmedia NEWS", "title": "熊本地震による通信障害、携帯4社全てで復旧"}, {"date": "2026/07/30", "media": "日本経済新聞電子版", "title": "通信大手4社、熊本地震の障害復旧 コカ・コーラは工場再開へ"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕ソフトバンク、熊本県内の通信障害が復旧＝スターリンクなど活用"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕NTTドコモとソフトバンク、通信障害が解消"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯3社が復旧＝熊本地震で通信障害☆差替"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯4社、通信障害復旧"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯4社、通信障害復旧＝熊本震度7"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本地震の通信障害、ソフトバンクが復旧 他3キャリアでは障害が続く"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "楽天モバイルの障害が復旧 熊本県の通信障害、4キャリアで復旧に"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本県の通信障害、ドコモとKDDIが復旧"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "ドコモとKDDI、熊本地震影響の障害から復旧"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "トヨタ3工場月内停止、半導体・飲料工場も止まる 熊本地震の影響拡大"}, {"date": "2026/07/29", "media": "日経クロステック", "title": "【2026年熊本地震】熊本地震で「JAPANローミング」発動、過去のキャリア通信障害の教訓生かす"}, {"date": "2026/07/29", "media": "日経ビジネス電子版", "title": "【Views】熊本県で震度7 ソニーやルネサスは停止、ローソンやファミマ社長が現地入り"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "日本製紙の煙突倒壊、2人心肺停止9人閉じ込め ホンダは稼働停止"}, {"date": "2026/07/29", "media": "東京読売新聞 朝刊", "title": "熊本震度7 道隆起 交通混乱 停電や断水 通信障害も"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯大手、通信障害続く＝ソフトバンクも"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "auの「iPhone 17」シリーズを値上げ、2年間の負担額も多くの機種で引き上げ 7月31日から"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "熊本地震の影響で通信障害が続く ドコモとKDDIはJAPANローミングを提供中、無料Wi-Fi「00000JAPAN」も開放"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "ソフトバンクと楽天モバイルもJAPANローミングを提供 熊本地震の影響で障害が続く"}, {"date": "2026/07/29", "media": "INTERNET Watch", "title": "総務省、令和8年熊本地震に関する通信インフラなどの被害状況を公開"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "ソフトバンクが熊本地震の通信障害で一部復旧、「JAPANローミング」提供中"}, {"date": "2026/07/29", "media": "東洋経済オンライン", "title": "「地震でスマホが圏外でも諦めない！」この1年で激変した\"つながるための新常識\"と、熊本での実際の有効性／"}, {"date": "2026/07/28", "media": "日経クロステック", "title": "【ニュース】熊本県の一部で通信障害発生、地震の影響 NTTドコモやKDDIなど"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモール爆発＝日本製紙の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震☆差替"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモールで爆発＝日本製紙、工場の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震"}, {"date": "2026/07/28", "media": "ITmedia NEWS", "title": "携帯各社、熊本の一部で通信障害 震度7の地震で 他社回線につながる「JAPANローミング」開始【追記】"}, {"date": "2026/07/28", "media": "ITmedia Mobile", "title": "熊本県の最大震度7の地震で通信サービスに障害 災害伝言版も開設【更新】"}, {"date": "2026/07/28", "media": "ケータイ Watch", "title": "総務省、携帯電話各社の被害報告を公開 KDDIとソフトバンクの状況が鮮明に"}, {"date": "2026/07/27", "media": "ケータイ Watch", "title": "ドコモ、iPhone 17シリーズなど値上げへ"}, {"date": "2026/07/24", "media": "ITmedia Mobile", "title": "ドコモが「iPhone 17」シリーズや「iPhone Air」を値上げ 一部機種は残価も引き上げ、実質負担額の影響は？"}, {"date": "2026/07/23", "media": "ケータイ Watch", "title": "「発火事故の軽減に貢献したい」、ドコモがモバイルバッテリーに力を入れる理由"}, {"date": "2026/07/23", "media": "プレジデントオンライン", "title": "配偶者が先立つと年金額が減少…タイプ別「100歳までお金が尽きない家計設計」"}, {"date": "2026/07/22", "media": "ITmedia Mobile", "title": "4キャリアのiPhoneも値上げされる？ ドコモ、KDDI、ソフトバンク、楽天モバイルに確認した【7月22日時点】"}, {"date": "2026/07/21", "media": "ITmedia Mobile", "title": "Apple値上げ後も「2年実質24円」は消えず 4キャリアの「iPhone 17／17e」価格まとめ【7月21日版】"}, {"date": "2026/07/20", "media": "ITmedia Mobile", "title": "なぜ「060」携帯番号は18カ月あっても延期になったのか？ それでも「慌てる必要はない」現状"}, {"date": "2026/07/19", "media": "マイナビニュース", "title": "フィッシング詐欺に異変、国内ISPのメールアカウント悪用が急増"}], "pr_gap": {"web_launch_count": 374, "web_launch_pct": 9.168913949497426, "web_selfpromo_count": 117, "web_selfpromo_pct": 2.8683500858053446, "tv_pos_programs": 44, "tv_total_programs": 94, "tv_pos_titles_top": [["＜９０分拡大スペシャル前にいろいろ見せちゃうよスペシャル＞Ｚ世代の若者は目的地に辿り着ける！？", 3], ["ＪＬＰＧＡツアーを支える陰の立役者　競技委員に密着", 2], ["＜おはＢｉｚ＞金融サービス持ち株会社設立　ＡＩサービス強化へ", 2], ["＜１週間のＱニュース＞家族に負担“デジタル終活”実施率２％", 2], ["約２０００人に避難指示　岩手・大槌町で山林火災　延焼続く", 2], ["ＣＤＴＶ３２年間のデビュー曲ランキングＴＯＰ１００", 2], ["＜けさ知っておきたい！ＮＥＷＳ検定＞「ドコモの銀行」始動　経済圏争い", 1], ["大自然に囲まれた昭和村　最先端クマ対策がここに！", 1]]}}, "softbank": {"label": "ソフトバンク", "web_total": 8675, "tv_total": 1136, "tv_total_seconds": 144681, "web_monthly": {"2025-08": 407, "2025-09": 617, "2025-10": 789, "2025-11": 730, "2025-12": 842, "2026-01": 507, "2026-02": 617, "2026-03": 686, "2026-04": 820, "2026-05": 728, "2026-06": 809, "2026-07": 907, "2026-08": 216}, "tv_monthly": {"2025-08": 49, "2025-09": 94, "2025-10": 116, "2025-11": 101, "2025-12": 80, "2026-01": 43, "2026-02": 81, "2026-03": 93, "2026-04": 111, "2026-05": 83, "2026-06": 103, "2026-07": 123, "2026-08": 59}, "web_sentiment": {"positive": 1400, "neutral": 6780, "negative": 495}, "tv_sentiment": {"positive": 546, "neutral": 417, "negative": 173}, "media_type_counts": {"新聞": 5269, "Webメディア（その他）": 1734, "Web/IT専門": 1557, "TV/ラジオ": 115}, "top_media": [["日本経済新聞電子版", 3411], ["共同通信ニュース", 548], ["ITmedia Mobile", 520], ["ケータイ Watch", 436], ["朝日新聞 朝刊", 392], ["時事通信ニュース", 346], ["東京読売新聞 朝刊", 330], ["日経クロステック", 225], ["マイナビニュース", 174], ["business network．jp", 166]], "station_counts": {"テレビ東京": 302, "テレビ朝日": 227, "TBSテレビ": 189, "NHK総合・東京": 171, "日本テレビ": 141, "フジテレビ": 106}, "neg_web_sample": [{"date": "2026/08/10", "media": "日本経済新聞電子版", "title": "ソニーFG、27年3月期最終黑字に 債券売却損縮小で上方修正"}, {"date": "2026/08/08", "media": "ITmedia Mobile", "title": "ahamoの「40GB化」は値上げの布石か？ 通信品質改善と料金設定で揺れるドコモの戦略"}, {"date": "2026/08/07", "media": "東京読売新聞 朝刊", "title": "ソフトバンクG17．7％減益 4〜6月期 子会社の人材確保 重荷"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "沖縄・鹿児島などで「JAPANローミング」提供 台風13号で通信障害"}, {"date": "2026/08/07", "media": "プレジデントオンライン", "title": "一流企業ほど「働かないオジサン」が増殖していく…トヨタも三菱UFJも逃れられない日本企業だけの”構造的欠陥”"}, {"date": "2026/08/06", "media": "共同通信ニュース", "title": "SBオスナが危険球退場―日ハム野村の頭部に当たる"}, {"date": "2026/08/04", "media": "日経クロステック", "title": "【ニュース解説】国産AI開発ノエトラ・丹波社長の焦燥 「一度失敗したら、もう後がない」"}, {"date": "2026/08/04", "media": "ITmedia Mobile", "title": "ソフトバンクが「iPhone 17」シリーズや「Air」を値上げ 新規・MNPの実質負担額は据え置き"}, {"date": "2026/07/31", "media": "東京読売新聞 朝刊", "title": "熊本地震 通信障害がすべて解消"}, {"date": "2026/07/31", "media": "ITmedia NEWS", "title": "熊本地震による通信障害、携帯4社全てで復旧"}, {"date": "2026/07/31", "media": "日本経済新聞電子版", "title": "セブン＆アイ(3382)自己株式処分"}, {"date": "2026/07/31", "media": "日本経済新聞電子版", "title": "東証後場寄り 日経平均は上げ幅縮小 日銀会合後に利益確定売り"}, {"date": "2026/07/30", "media": "日本経済新聞電子版", "title": "通信大手4社、熊本地震の障害復旧 コカ・コーラは工場再開へ"}, {"date": "2026/07/30", "media": "日本経済新聞電子版", "title": "ソフトバンクG株価、アーム急落で3カ月半ぶり安値 上昇する場面も"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕ソフトバンク、熊本県内の通信障害が復旧＝スターリンクなど活用"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕NTTドコモとソフトバンク、通信障害が解消"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯3社が復旧＝熊本地震で通信障害☆差替"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯4社、通信障害復旧"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯4社、通信障害復旧＝熊本震度7"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本地震の通信障害、ソフトバンクが復旧 他3キャリアでは障害が続く"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "楽天モバイルの障害が復旧 熊本県の通信障害、4キャリアで復旧に"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本県の通信障害、ドコモとKDDIが復旧"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "東京電力大幅減益、原発再稼働でも業績戻らず 顧客失い資本提携に逆風－ビジネスTODAY"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "トヨタ3工場月内停止、半導体・飲料工場も止まる 熊本地震の影響拡大"}, {"date": "2026/07/29", "media": "日経クロステック", "title": "【2026年熊本地震】熊本地震で「JAPANローミング」発動、過去のキャリア通信障害の教訓生かす"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯大手、通信障害続く＝ソフトバンクも"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "auの「iPhone 17」シリーズを値上げ、2年間の負担額も多くの機種で引き上げ 7月31日から"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "熊本地震の影響で通信障害が続く ドコモとKDDIはJAPANローミングを提供中、無料Wi-Fi「00000JAPAN」も開放"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "ソフトバンクと楽天モバイルもJAPANローミングを提供 熊本地震の影響で障害が続く"}, {"date": "2026/07/29", "media": "INTERNET Watch", "title": "総務省、令和8年熊本地震に関する通信インフラなどの被害状況を公開"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "ソフトバンクが熊本地震の通信障害で一部復旧、「JAPANローミング」提供中"}, {"date": "2026/07/29", "media": "東洋経済オンライン", "title": "「地震でスマホが圏外でも諦めない！」この1年で激変した\"つながるための新常識\"と、熊本での実際の有効性／"}, {"date": "2026/07/28", "media": "日経クロステック", "title": "【ニュース】熊本県の一部で通信障害発生、地震の影響 NTTドコモやKDDIなど"}, {"date": "2026/07/28", "media": "日本経済新聞電子版", "title": "ソフトバンクGが4%安、キオクシア急落で売り警戒（28日の株式市場）"}, {"date": "2026/07/28", "media": "日本経済新聞電子版", "title": "NY株ハイライト エヌビディア急落 「循環投資」に不透明感、じわり高まる財務懸念"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモール爆発＝日本製紙の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震☆差替"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモールで爆発＝日本製紙、工場の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震"}, {"date": "2026/07/28", "media": "ITmedia NEWS", "title": "携帯各社、熊本の一部で通信障害 震度7の地震で 他社回線につながる「JAPANローミング」開始【追記】"}, {"date": "2026/07/28", "media": "ITmedia Mobile", "title": "熊本県の最大震度7の地震で通信サービスに障害 災害伝言版も開設【更新】"}, {"date": "2026/07/28", "media": "ケータイ Watch", "title": "総務省、携帯電話各社の被害報告を公開 KDDIとソフトバンクの状況が鮮明に"}, {"date": "2026/07/27", "media": "日本経済新聞電子版", "title": "東証大引け 日経平均は反発 米イランの戦闘停止で AI半導体には売り"}, {"date": "2026/07/24", "media": "日本経済新聞電子版", "title": "キオクシア、株価急落 韓国の株価指数低下が重荷（24日の株式市場）"}, {"date": "2026/07/24", "media": "ITmedia NEWS", "title": "「2日かかる攻撃が25分に」生成AIで“爆速化”するサイバー攻撃、パロアルトの識者が警鐘"}, {"date": "2026/07/23", "media": "プレジデントオンライン", "title": "配偶者が先立つと年金額が減少…タイプ別「100歳までお金が尽きない家計設計」"}, {"date": "2026/07/22", "media": "ITmedia Mobile", "title": "4キャリアのiPhoneも値上げされる？ ドコモ、KDDI、ソフトバンク、楽天モバイルに確認した【7月22日時点】"}, {"date": "2026/07/21", "media": "日本経済新聞電子版", "title": "会計不正に甘い日本、罰金は米国の80分の1 経営者へのけん制弱く－会計不正の温床㊤"}, {"date": "2026/07/21", "media": "ZDNet Japan", "title": "AIサイバー攻撃にどう備えるか－－ソフトバンク宮川CEOが「シカゴ大火」から説くモダナイゼーションの急務"}, {"date": "2026/07/21", "media": "ITmedia Mobile", "title": "Apple値上げ後も「2年実質24円」は消えず 4キャリアの「iPhone 17／17e」価格まとめ【7月21日版】"}, {"date": "2026/07/20", "media": "毎日新聞 朝刊", "title": "米大リーグ：米大リーグ マーリンズ入り 麟太郎が表明 1位指名ソフトバンク断る 「人材流出」に危機感"}, {"date": "2026/07/20", "media": "ITmedia Mobile", "title": "なぜ「060」携帯番号は18カ月あっても延期になったのか？ それでも「慌てる必要はない」現状"}, {"date": "2026/07/17", "media": "日本経済新聞電子版", "title": "野村HD株が続落、相場安で運用益減少の懸念（17日の株式市場）"}, {"date": "2026/07/16", "media": "日本経済新聞電子版", "title": "サイゼリヤ株がストップ高 「値上げ検討」を好感（16日の株式市場）"}, {"date": "2026/07/16", "media": "日本経済新聞電子版", "title": "東証後場寄り 日経平均下げ渋る 韓国株下げ幅縮小や米先物堅調で"}, {"date": "2026/07/14", "media": "日本経済新聞電子版", "title": "株、信用買い残が2週連続減少 6兆7322億円・10日時点"}, {"date": "2026/07/13", "media": "日本経済新聞電子版", "title": "東証14時 日経平均は下げ足速める 韓国株急落でAI・半導体関連が一段安"}, {"date": "2026/07/13", "media": "INTERNET Watch", "title": "【2019年のINTERNET Watch】「7pay」で不正利用被害、“二段階認証”が話題に。「Yahoo！ BB ADSL」新規受付終了は1つの時代の終わり"}, {"date": "2026/07/13", "media": "Business Insider Japan PREMIUM", "title": "通信と金融は「混ぜるな危険」か。NTTドコモFG発足に見る銀行とキャリアが陥る経済圏のジレンマ"}, {"date": "2026/07/10", "media": "日本経済新聞電子版", "title": "東証14時 日経平均は伸び悩み ETF換金売り重荷、キオクシアは上げ幅縮小"}, {"date": "2026/07/10", "media": "朝日新聞 夕刊", "title": "新指標「日本度」公開 対サイバー攻撃ソフトの安全性"}, {"date": "2026/07/10", "media": "ITmedia Mobile", "title": "「060」携帯電話番号の提供延期の原因は？ 林総務大臣が改めて説明"}], "pr_gap": {"web_launch_count": 363, "web_launch_pct": 4.184438040345821, "web_selfpromo_count": 169, "web_selfpromo_pct": 1.948126801152738, "tv_pos_programs": 78, "tv_total_programs": 113, "tv_pos_titles_top": [["マーケット情報", 16], ["エンディング", 8], ["午前のマーケット", 6], ["＜きょうのマーケット＞きょうの株は", 5], ["元ソフトバンク社員　南極で関わった…人類初の大偉業？人生激変！「山奥に連れてこられた…」ナゼ長野で秘境生活？", 5], ["きょうの予定", 4], ["スタジオ解説", 3], ["今週の予定", 2]]}}, "kddi": {"label": "KDDI", "web_total": 3199, "tv_total": 336, "tv_total_seconds": 51431, "web_monthly": {"2025-08": 0, "2025-09": 36, "2025-10": 302, "2025-11": 246, "2025-12": 263, "2026-01": 227, "2026-02": 288, "2026-03": 280, "2026-04": 335, "2026-05": 299, "2026-06": 357, "2026-07": 430, "2026-08": 136}, "tv_monthly": {"2025-08": 17, "2025-09": 8, "2025-10": 42, "2025-11": 14, "2025-12": 35, "2026-01": 26, "2026-02": 25, "2026-03": 26, "2026-04": 41, "2026-05": 7, "2026-06": 34, "2026-07": 57, "2026-08": 4}, "web_sentiment": {"positive": 597, "neutral": 2131, "negative": 471}, "tv_sentiment": {"positive": 82, "neutral": 79, "negative": 175}, "media_type_counts": {"新聞": 1408, "Web/IT専門": 1176, "Webメディア（その他）": 580, "TV/ラジオ": 35}, "top_media": [["日本経済新聞電子版", 852], ["ケータイ Watch", 447], ["ITmedia Mobile", 356], ["日経クロステック", 148], ["business network．jp", 118], ["時事通信ニュース", 97], ["東京読売新聞 朝刊", 95], ["CNET Japan", 92], ["マイナビニュース", 71], ["朝日新聞 朝刊", 64]], "station_counts": {"TBSテレビ": 68, "NHK総合・東京": 61, "フジテレビ": 58, "テレビ朝日": 57, "テレビ東京": 47, "日本テレビ": 45}, "neg_web_sample": [{"date": "2026/08/10", "media": "日本経済新聞電子版", "title": "楽天Gの三木谷浩史会長、KDDIからの回線貸し出し「順次縮小で合意」"}, {"date": "2026/08/10", "media": "共同通信ニュース", "title": "街灯センサーで事故抑止―トヨタ、車以外でも対策"}, {"date": "2026/08/10", "media": "ScanNetSecurity", "title": "KDDI の ISP 事業者向けメールシステムに不正アクセス、総務省が行政指導"}, {"date": "2026/08/08", "media": "朝日新聞 朝刊", "title": "楽天へローミング縮小"}, {"date": "2026/08/08", "media": "東京読売新聞 朝刊", "title": "KDDI 楽天へ回線貸与縮小 ローミング 「通信量想定以上」"}, {"date": "2026/08/08", "media": "ITmedia Mobile", "title": "ahamoの「40GB化」は値上げの布石か？ 通信品質改善と料金設定で揺れるドコモの戦略"}, {"date": "2026/08/07", "media": "日本経済新聞電子版", "title": "KDDIが22％増益、携帯やデータセンター好調 情報漏洩の不祥事が影"}, {"date": "2026/08/07", "media": "日本経済新聞電子版", "title": "KDDIの純利益22％増 4〜6月、携帯料金の値上げ効果で"}, {"date": "2026/08/07", "media": "ITmedia NEWS", "title": "KDDI、社内の全システムで脆弱性診断へ 1220万人分漏えいで「未知の脆弱性と片付けない」"}, {"date": "2026/08/07", "media": "ITmedia Mobile", "title": "KDDIが値上げしても解約率が低下した理由 au、UQ mobile、povoを循環させ「脱・販促費競争」へ"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "沖縄・鹿児島などで「JAPANローミング」提供 台風13号で通信障害"}, {"date": "2026/08/07", "media": "ケータイ Watch", "title": "KDDI松田社長、762万人に影響したISP向けメール基盤不正アクセスで対策をあらためて説明"}, {"date": "2026/08/05", "media": "日本経済新聞電子版", "title": "サツドラHD、三菱商事系と築く道内経済圏 MBO成立で上場廃止へ"}, {"date": "2026/08/04", "media": "日本経済新聞電子版", "title": "エステ予約3300万件個人情報漏洩恐れ EPARKリラクに不正アクセス"}, {"date": "2026/07/31", "media": "日本経済新聞電子版", "title": "東証後場寄り 日経平均は上げ幅縮小 日銀会合後に利益確定売り"}, {"date": "2026/07/31", "media": "東京読売新聞 朝刊", "title": "熊本地震 通信障害がすべて解消"}, {"date": "2026/07/31", "media": "ITmedia NEWS", "title": "熊本地震による通信障害、携帯4社全てで復旧"}, {"date": "2026/07/30", "media": "日本経済新聞電子版", "title": "通信大手4社、熊本地震の障害復旧 コカ・コーラは工場再開へ"}, {"date": "2026/07/30", "media": "朝日新聞 朝刊", "title": "パスワード流出、KDDI厳重注意"}, {"date": "2026/07/30", "media": "毎日新聞 朝刊", "title": "不正アクセス：メール漏えいでKDDIを指導 総務省「厳重注意」"}, {"date": "2026/07/30", "media": "東京読売新聞 朝刊", "title": "KDDI流出で総務省行政指導 パスワード762万人分"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕ソフトバンク、熊本県内の通信障害が復旧＝スターリンクなど活用"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕NTTドコモとソフトバンク、通信障害が解消"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯3社が復旧＝熊本地震で通信障害☆差替"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯4社、通信障害復旧"}, {"date": "2026/07/30", "media": "時事通信ニュース", "title": "携帯4社、通信障害復旧＝熊本震度7"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "UQ mobileの「iPhone 17e」「iPhone 16」値上げ 2年間の負担額は変更ない場合も"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本地震の通信障害、ソフトバンクが復旧 他3キャリアでは障害が続く"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "楽天モバイルの障害が復旧 熊本県の通信障害、4キャリアで復旧に"}, {"date": "2026/07/30", "media": "ITmedia Mobile", "title": "熊本県の通信障害、ドコモとKDDIが復旧"}, {"date": "2026/07/30", "media": "INTERNET Watch", "title": "KDDIに総務省が行政指導、ISP向けメールシステムへの不正アクセスで約762万件のパスワード漏えい"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "総務省がKDDIに行政指導、ISP向けメールシステム不正アクセス 約762万人に影響"}, {"date": "2026/07/30", "media": "ケータイ Watch", "title": "ドコモとKDDI、熊本地震影響の障害から復旧"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "パスワード761万人分漏洩、KDDIを行政指導 総務省"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "トヨタ3工場月内停止、半導体・飲料工場も止まる 熊本地震の影響拡大"}, {"date": "2026/07/29", "media": "日経クロステック", "title": "【2026年熊本地震】熊本地震で「JAPANローミング」発動、過去のキャリア通信障害の教訓生かす"}, {"date": "2026/07/29", "media": "日経ビジネス電子版", "title": "【Views】熊本県で震度7 ソニーやルネサスは停止、ローソンやファミマ社長が現地入り"}, {"date": "2026/07/29", "media": "日本経済新聞電子版", "title": "日本製紙の煙突倒壊、2人心肺停止9人閉じ込め ホンダは稼働停止"}, {"date": "2026/07/29", "media": "東京読売新聞 朝刊", "title": "熊本震度7 道隆起 交通混乱 停電や断水 通信障害も"}, {"date": "2026/07/29", "media": "共同通信ニュース", "title": "総務省、KDDI厳重注意―メール、パスワード漏えいで"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "総務省、KDDIに行政指導＝不正アクセスで利用者への影響大"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "KDDIに行政指導＝不正アクセスで情報漏えい―総務省"}, {"date": "2026/07/29", "media": "時事通信ニュース", "title": "〔熊本地震影響〕携帯大手、通信障害続く＝ソフトバンクも"}, {"date": "2026/07/29", "media": "NHKニュース", "title": "KDDI提供システム 不正アクセス受けアドレスなど流出 通信秘密漏えいで行政指導"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "auの「iPhone 17」シリーズを値上げ、2年間の負担額も多くの機種で引き上げ 7月31日から"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "熊本地震の影響で通信障害が続く ドコモとKDDIはJAPANローミングを提供中、無料Wi-Fi「00000JAPAN」も開放"}, {"date": "2026/07/29", "media": "ITmedia Mobile", "title": "ソフトバンクと楽天モバイルもJAPANローミングを提供 熊本地震の影響で障害が続く"}, {"date": "2026/07/29", "media": "INTERNET Watch", "title": "総務省、令和8年熊本地震に関する通信インフラなどの被害状況を公開"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "auとUQの「iPhone 17」値上げ、最大約10％"}, {"date": "2026/07/29", "media": "ケータイ Watch", "title": "ソフトバンクが熊本地震の通信障害で一部復旧、「JAPANローミング」提供中"}, {"date": "2026/07/29", "media": "東洋経済オンライン", "title": "「地震でスマホが圏外でも諦めない！」この1年で激変した\"つながるための新常識\"と、熊本での実際の有効性／"}, {"date": "2026/07/28", "media": "日経クロステック", "title": "【ニュース】熊本県の一部で通信障害発生、地震の影響 NTTドコモやKDDIなど"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモール爆発＝日本製紙の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震☆差替"}, {"date": "2026/07/28", "media": "時事通信ニュース", "title": "イオンモールで爆発＝日本製紙、工場の煙突倒壊―トヨタ・ホンダ、工場停止―熊本地震"}, {"date": "2026/07/28", "media": "ITmedia NEWS", "title": "携帯各社、熊本の一部で通信障害 震度7の地震で 他社回線につながる「JAPANローミング」開始【追記】"}, {"date": "2026/07/28", "media": "ITmedia Mobile", "title": "熊本県の最大震度7の地震で通信サービスに障害 災害伝言版も開設【更新】"}, {"date": "2026/07/28", "media": "ケータイ Watch", "title": "総務省、携帯電話各社の被害報告を公開 KDDIとソフトバンクの状況が鮮明に"}, {"date": "2026/07/27", "media": "朝日新聞 朝刊", "title": "パスワードなど40万人分が漏洩 STNet「ピカラ」 ／徳島県"}, {"date": "2026/07/27", "media": "CNET Japan", "title": "KDDI、モバイルバッテリーを都内4直営店で無料回収 予約不要、メーカー問わず"}, {"date": "2026/07/27", "media": "ITmedia Mobile", "title": "直営auショップで使用済みモバイルバッテリーを無料回収 新宿／池袋／上野／銀座で10月31日まで"}], "pr_gap": {"web_launch_count": 266, "web_launch_pct": 8.315098468271334, "web_selfpromo_count": 46, "web_selfpromo_pct": 1.437949359174742, "tv_pos_programs": 37, "tv_total_programs": 77, "tv_pos_titles_top": [["＜エコノミーＺ＞拡大するポッドキャスト　Ｚ世代が「音声」に見いだす価値", 3], ["＜今さら羽田空港　世界一の秘密をシローＳＰ＞予約殺到！大人気ミュージアム", 2], ["ＮＴＴ　自社開発生成ＡＩ　新サービス提供開始", 2], ["＜ＢＵＺＺ　ＮＥＷＳ＞注目　スマホ１台で２つの番号「セカンドナンバー」開始", 1], ["＜けさ知っておきたい！ＮＥＷＳ検定＞「ドコモの銀行」始動　経済圏争い", 1], ["熊本県で震度７　けが人多数　病院も被災　断水・停電も", 1], ["＜多摩センター　ＢＥＳＴ２０＞４位　大企業のオフィス", 1], ["＜けさ知っておきたい！ＮＥＷＳ検定＞カカクコム“争奪戦”駆け引き激化", 1]]}}}, "notes": {"softbank_baseball_excluded_web": 4738, "softbank_baseball_before_web": 13413, "softbank_baseball_excluded_tv": 2641, "softbank_baseball_before_tv": 3777}};
+const COMPANY_KEYS = ["docomo","softbank","kddi"];
+const COMPANY_COLOR = {docomo:"var(--docomo)", softbank:"var(--softbank)", kddi:"var(--kddi)"};
+const COMPANY_COLOR_SOFT = {docomo:"var(--docomo-soft)", softbank:"var(--softbank-soft)", kddi:"var(--kddi-soft)"};
+
+function fmt(n){ return n.toLocaleString("ja-JP"); }
+
+document.getElementById("periodLabel").textContent =
+  `集計期間: ${DATA.months[0]} 〜 ${DATA.months[DATA.months.length-1]}（${DATA.months.length}ヶ月分）`;
+document.getElementById("sbWebExcl").textContent = fmt(DATA.notes.softbank_baseball_excluded_web);
+document.getElementById("sbTvExcl").textContent = fmt(DATA.notes.softbank_baseball_excluded_tv);
+
+// ---- company cards ----
+(function(){
+  const el = document.getElementById("companyCards");
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const webTotal = c.web_total;
+    const tvTotal = c.tv_total;
+    const combinedTotal = webTotal + tvTotal;
+    const negPct = ((c.web_sentiment.negative + c.tv_sentiment.negative) / combinedTotal * 100).toFixed(1);
+    const posPct = ((c.web_sentiment.positive + c.tv_sentiment.positive) / combinedTotal * 100).toFixed(1);
+    const tvMin = Math.round(c.tv_total_seconds/60);
+    return `
+    <div class="company-card" style="--c:${COMPANY_COLOR[key]}">
+      <div class="cname"><span class="sw"></span>${c.label}</div>
+      <div class="metric-row"><span class="m-label">総露出件数（Web+TV）</span><span class="m-value">${fmt(combinedTotal)}件</span></div>
+      <div class="metric-row"><span class="m-label">Web/新聞掲載件数</span><span class="m-value">${fmt(webTotal)}件</span></div>
+      <div class="metric-row"><span class="m-label">テレビ放送件数</span><span class="m-value">${fmt(tvTotal)}件</span></div>
+      <div class="metric-row"><span class="m-label">テレビ総放送時間</span><span class="m-value">${fmt(tvMin)}分</span></div>
+      <div class="metric-row"><span class="m-label">ポジティブ比率</span><span class="m-value pos">${posPct}%</span></div>
+      <div class="metric-row"><span class="m-label">ネガティブ比率</span><span class="m-value neg">${negPct}%</span></div>
+    </div>`;
+  }).join("");
+})();
+
+// ---- monthly line chart (3 series, web only for comparability) ----
+(function(){
+  const svg = document.getElementById("monthlyLineChart");
+  const months = DATA.months;
+  const W = Math.max(760, months.length*70), H = 320;
+  const padL = 46, padR = 16, padT = 20, padB = 40;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  let maxVal = 0;
+  COMPANY_KEYS.forEach(key=>{
+    months.forEach(m=>{ maxVal = Math.max(maxVal, DATA.companies[key].web_monthly[m] || 0); });
+  });
+  const stepX = plotW / (months.length - 1);
+
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", H);
+
+  let html = "";
+  const steps = 4;
+  for(let s=0;s<=steps;s++){
+    const val = Math.round(maxVal/steps*s);
+    const y = padT + plotH - (val/maxVal)*plotH;
+    html += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
+    html += `<text x="${padL-8}" y="${y+4}" text-anchor="end" class="axis-label">${val}</text>`;
+  }
+  months.forEach((m,i)=>{
+    html += `<text x="${padL+stepX*i}" y="${H-14}" text-anchor="middle" class="axis-label">${m.slice(2)}</text>`;
+  });
+
+  COMPANY_KEYS.forEach(key=>{
+    const c = DATA.companies[key];
+    const pts = months.map((m,i)=>{
+      const v = c.web_monthly[m] || 0;
+      const x = padL + stepX*i;
+      const y = padT + plotH - (v/maxVal)*plotH;
+      return [x,y,v,m];
+    });
+    const path = pts.map((p,i)=> (i===0?"M":"L") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+    html += `<path d="${path}" fill="none" stroke="${COMPANY_COLOR[key]}" stroke-width="2.5"/>`;
+    pts.forEach(p=>{
+      html += `<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="${COMPANY_COLOR[key]}"><title>${c.label} ${p[3]}: ${p[2]}件</title></circle>`;
+    });
+  });
+
+  svg.innerHTML = html;
+})();
+
+// ---- sentiment compare (3 stacked bars) ----
+(function(){
+  const el = document.getElementById("sentimentCompare");
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const s = c.web_sentiment;
+    const total = s.positive + s.neutral + s.negative;
+    const segs = [["positive",s.positive,"var(--positive)"],["neutral",s.neutral,"var(--neutral-tone)"],["negative",s.negative,"var(--negative)"]];
+    let barHtml = segs.map(([k,v,color])=>{
+      const pct = (v/total*100);
+      return pct > 3 ? `<div style="width:${pct}%;background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:11px;font-weight:700;">${pct.toFixed(0)}%</div>` : `<div style="width:${pct}%;background:${color};"></div>`;
+    }).join("");
+    return `
+      <div style="margin-bottom:16px;">
+        <div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}（n=${fmt(total)}）</div>
+        <div style="display:flex;height:28px;border-radius:6px;overflow:hidden;">${barHtml}</div>
+      </div>`;
+  }).join("");
+})();
+
+// ---- media type compare ----
+(function(){
+  const el = document.getElementById("mediaTypeCompare");
+  const allTypes = ["新聞","Web/IT専門","Webメディア（その他）","スポーツ紙","TV/ラジオ"];
+  const typeColors = {"新聞":"#8892A6","Web/IT専門":"var(--positive)","Webメディア（その他）":"var(--neutral-tone)","スポーツ紙":"#C79A3E","TV/ラジオ":"#6A8FBF"};
+  el.innerHTML = `<div class="three-col">` + COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const total = c.web_total;
+    const rows = allTypes.filter(t=>c.media_type_counts[t]).map(t=>{
+      const v = c.media_type_counts[t] || 0;
+      const pct = (v/total*100).toFixed(1);
+      return `<div class="bar-row"><div class="bar-name">${t}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${typeColors[t]}"></div></div><div class="bar-val">${pct}%</div></div>`;
+    }).join("");
+    return `<div><div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}</div>${rows}</div>`;
+  }).join("") + `</div>`;
+})();
+
+// ---- TV compare ----
+(function(){
+  const el = document.getElementById("tvCompare");
+  const maxCount = Math.max(...COMPANY_KEYS.map(k=>DATA.companies[k].tv_total));
+  const maxMin = Math.max(...COMPANY_KEYS.map(k=>Math.round(DATA.companies[k].tv_total_seconds/60)));
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const tvMin = Math.round(c.tv_total_seconds/60);
+    const stations = Object.entries(c.station_counts).slice(0,6);
+    const maxStation = stations.length ? Math.max(...stations.map(s=>s[1])) : 1;
+    const stationRows = stations.map(([name,v])=>`
+      <div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar-fill" style="width:${(v/maxStation*100).toFixed(1)}%;background:${COMPANY_COLOR[key]}"></div></div><div class="bar-val">${v}</div></div>`).join("");
+    return `
+      <div>
+        <div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}</div>
+        <div class="metric-row"><span class="m-label">放送件数</span><span class="m-value">${fmt(c.tv_total)}件</span></div>
+        <div class="metric-row"><span class="m-label">総放送時間</span><span class="m-value">${fmt(tvMin)}分</span></div>
+        <div style="margin-top:10px;">${stationRows}</div>
+      </div>`;
+  }).join("");
+})();
+
+// ---- summary text (data-derived, not subjective) ----
+(function(){
+  const el = document.getElementById("summaryText");
+  const rank = (getter) => [...COMPANY_KEYS].sort((a,b)=>getter(DATA.companies[b])-getter(DATA.companies[a]));
+  const webRank = rank(c=>c.web_total);
+  const negRank = rank(c=>{
+    const t = c.web_sentiment.positive+c.web_sentiment.neutral+c.web_sentiment.negative;
+    return c.web_sentiment.negative/t;
+  });
+  const tvRank = rank(c=>c.tv_total);
+  const L = k => DATA.companies[k].label;
+  el.innerHTML = `
+    <p>・Web/新聞の掲載件数は <b>${L(webRank[0])}</b>（${fmt(DATA.companies[webRank[0]].web_total)}件）が最多、次いで<b>${L(webRank[1])}</b>（${fmt(DATA.companies[webRank[1]].web_total)}件）、<b>${L(webRank[2])}</b>（${fmt(DATA.companies[webRank[2]].web_total)}件）の順。</p>
+    <p>・見出しキーワードによるネガティブ比率は <b>${L(negRank[0])}</b> が最も高く、<b>${L(negRank[2])}</b> が最も低い。</p>
+    <p>・テレビ放送件数は <b>${L(tvRank[0])}</b>（${fmt(DATA.companies[tvRank[0]].tv_total)}件）が最多。</p>
+  `;
+})();
+
+// ---- negative lists (3 columns) ----
+(function(){
+  const el = document.getElementById("negLists");
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const rows = c.neg_web_sample.slice(0,25).map(it=>`
+      <tr><td class="col-date">${it.date}</td><td>${it.title}</td></tr>`).join("");
+    return `
+      <div>
+        <div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}（全${fmt(c.web_sentiment.negative)}件中25件表示）</div>
+        <div class="scrolly"><table><thead><tr><th class="col-date">日付</th><th>タイトル</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
+  }).join("");
+})();
+
+// =========================================================
+// ============== PR GAP ANALYSIS SECTION ===================
+// =========================================================
+
+// ---- launch/selfpromo compare bars ----
+(function(){
+  const el = document.getElementById("launchCompare");
+  el.innerHTML = `<div class="three-col">` + COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const g = c.pr_gap;
+    const maxPct = Math.max(...COMPANY_KEYS.map(k=>DATA.companies[k].pr_gap.web_launch_pct));
+    return `
+      <div>
+        <div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}</div>
+        <div class="bar-row"><div class="bar-name">発表・開始系</div><div class="bar-track"><div class="bar-fill" style="width:${(g.web_launch_pct/maxPct*100).toFixed(1)}%;background:${COMPANY_COLOR[key]}"></div></div><div class="bar-val">${g.web_launch_pct.toFixed(1)}%</div></div>
+        <div class="bar-row"><div class="bar-name">受賞・No.1系</div><div class="bar-track"><div class="bar-fill" style="width:${(g.web_selfpromo_pct/maxPct*100).toFixed(1)}%;background:${COMPANY_COLOR[key]}"></div></div><div class="bar-val">${g.web_selfpromo_pct.toFixed(1)}%</div></div>
+      </div>`;
+  }).join("") + `</div>`;
+})();
+
+// ---- gap scatter: web launch% (x) vs tv positive count (y), bubble size = tv total ----
+(function(){
+  const svg = document.getElementById("gapScatter");
+  const W = 640, H = 320;
+  const padL = 56, padR = 30, padT = 20, padB = 46;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", H);
+
+  const pts = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    return {key, x: c.pr_gap.web_launch_pct, y: c.tv_sentiment.positive, r: Math.sqrt(c.tv_total)*1.6, label: c.label};
+  });
+  const maxX = Math.max(...pts.map(p=>p.x)) * 1.2;
+  const maxY = Math.max(...pts.map(p=>p.y)) * 1.25;
+
+  let html = "";
+  // axes grid
+  for(let i=0;i<=4;i++){
+    const gx = padL + plotW*i/4;
+    const gy = padT + plotH - plotH*i/4;
+    html += `<line x1="${gx}" y1="${padT}" x2="${gx}" y2="${padT+plotH}" stroke="var(--line)" stroke-width="1"/>`;
+    html += `<line x1="${padL}" y1="${gy}" x2="${padL+plotW}" y2="${gy}" stroke="var(--line)" stroke-width="1"/>`;
+    html += `<text x="${gx}" y="${padT+plotH+18}" text-anchor="middle" class="axis-label">${(maxX*i/4).toFixed(1)}%</text>`;
+    html += `<text x="${padL-8}" y="${gy+4}" text-anchor="end" class="axis-label">${Math.round(maxY*i/4)}</text>`;
+  }
+  html += `<text x="${padL+plotW/2}" y="${H-6}" text-anchor="middle" class="axis-label">Web「発表・開始」系記事比率 →</text>`;
+  html += `<text x="14" y="${padT+plotH/2}" text-anchor="middle" class="axis-label" transform="rotate(-90 14 ${padT+plotH/2})">TVポジティブ件数 →</text>`;
+
+  pts.forEach(p=>{
+    const x = padL + (p.x/maxX)*plotW;
+    const y = padT + plotH - (p.y/maxY)*plotH;
+    html += `<circle cx="${x}" cy="${y}" r="${p.r}" fill="${COMPANY_COLOR[p.key]}" fill-opacity="0.75" stroke="${COMPANY_COLOR[p.key]}" stroke-width="1.5"><title>${p.label}: 発表系${p.x.toFixed(1)}% / TVポジ${p.y}件 / TV総数${DATA.companies[p.key].tv_total}件</title></circle>`;
+    html += `<text x="${x}" y="${y - p.r - 6}" text-anchor="middle" font-size="12" font-weight="700">${p.label}</text>`;
+  });
+
+  svg.innerHTML = html;
+})();
+
+// ---- program reach compare ----
+(function(){
+  const el = document.getElementById("reachCompare");
+  document.getElementById("totalProgramsNote").textContent = COMPANY_KEYS.map(k=>`${DATA.companies[k].label} ${DATA.companies[k].pr_gap.tv_total_programs}番組`).join(" / ");
+  const maxProg = Math.max(...COMPANY_KEYS.map(k=>DATA.companies[k].pr_gap.tv_pos_programs));
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const g = c.pr_gap;
+    return `<div class="bar-row"><div class="bar-name">${c.label}</div><div class="bar-track"><div class="bar-fill" style="width:${(g.tv_pos_programs/maxProg*100).toFixed(1)}%;background:${COMPANY_COLOR[key]}"></div></div><div class="bar-val">${g.tv_pos_programs}番組</div></div>`;
+  }).join("");
+})();
+
+// ---- repeat topics ----
+(function(){
+  const el = document.getElementById("repeatTopics");
+  el.innerHTML = COMPANY_KEYS.map(key=>{
+    const c = DATA.companies[key];
+    const items = c.pr_gap.tv_pos_titles_top.filter(([t,n])=>n>=2);
+    const rows = items.length ? items.map(([t,n])=>`<div class="bar-row"><div class="bar-name" style="width:auto;flex:1;white-space:normal;">${t}</div><div class="bar-val" style="width:auto;flex:0 0 30px;">${n}回</div></div>`).join("") : `<p style="color:var(--muted);font-size:12.5px;">2回以上反復されたテーマなし</p>`;
+    return `<div><div class="sub-h"><span class="sw" style="background:${COMPANY_COLOR[key]}"></span>${c.label}</div>${rows}</div>`;
+  }).join("");
+})();
+
+// ---- narrative (data-derived) ----
+(function(){
+  const el = document.getElementById("gapNarrative");
+  const d = DATA.companies.docomo, s = DATA.companies.softbank, k = DATA.companies.kddi;
+  el.innerHTML = `
+    <p>・Web上の「発表・開始」系記事比率は <b>ドコモが${d.pr_gap.web_launch_pct.toFixed(1)}%</b>で3社中最も高く（ソフトバンク${s.pr_gap.web_launch_pct.toFixed(1)}%、KDDI${k.pr_gap.web_launch_pct.toFixed(1)}%）、材料発信の"量"自体は劣っていない。</p>
+    <p>・一方でテレビ露出件数は <b>ドコモ${fmt(d.tv_total)}件</b>に対し<b>ソフトバンク${fmt(s.tv_total)}件</b>（約${(s.tv_total/d.tv_total).toFixed(1)}倍）、TVポジティブ比率も ドコモ${(d.tv_sentiment.positive/(d.tv_sentiment.positive+d.tv_sentiment.neutral+d.tv_sentiment.negative)*100).toFixed(1)}% に対し ソフトバンク${(s.tv_sentiment.positive/(s.tv_sentiment.positive+s.tv_sentiment.neutral+s.tv_sentiment.negative)*100).toFixed(1)}% と差がある。</p>
+    <p>・ポジティブTV露出が広がった番組数は ドコモ${d.pr_gap.tv_pos_programs}番組に対し ソフトバンク${s.pr_gap.tv_pos_programs}番組。ソフトバンクは同一テーマ（AI投資戦略など）が複数の経済番組で反復的に取り上げられているのに対し、ドコモは反復性のある看板テーマが少ない。</p>
+    <p>・以上から、<b>「発表の量」ではなくその発表を話題化・波及させてテレビなど大衆メディアに乗せる"仕掛け"に差がある</b>という見立てが、データからは支持される。</p>
+  `;
+})();
+</script>

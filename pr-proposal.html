@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>攻めのPRを実現する、広報体制の基盤アップデート｜NTTドコモ株式会社 御中</title>
+<style>
+:root{
+  --ink:#1a1a1a;
+  --ink-2:#555555;
+  --ink-3:#8e8e8e;
+  --accent:#b0242c;
+  --accent-tint:#f7e8e9;
+  --hairline:#d9d9d9;
+  --fill-gray:#e9e9ea;
+  --paper:#ffffff;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{
+  margin:0;background:#d8d8d8;color:var(--ink);
+  font-family:"Yu Gothic","游ゴシック","Yu Gothic Medium",Meiryo,"Hiragino Kaku Gothic ProN",sans-serif;
+  font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased;
+}
+.deck{padding:32px 0 80px}
+.slide{
+  width:1280px;height:720px;margin:0 auto 28px;background:var(--paper);
+  position:relative;overflow:hidden;padding:32px 64px 0;
+  border:1px solid var(--hairline);
+  display:flex;flex-direction:column;
+}
+.slide-head{display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:10px;border-bottom:1px solid var(--hairline);margin-bottom:18px;flex:none}
+.slide-part{font-size:16px;letter-spacing:.14em;color:var(--accent);font-weight:700}
+.slide-sub{font-size:16px;letter-spacing:.06em;color:var(--ink-3)}
+.slide-foot{position:absolute;left:72px;right:72px;bottom:14px;display:flex;
+  justify-content:space-between;font-size:16px;color:var(--ink-3);
+  border-top:1px solid var(--hairline);padding-top:5px}
+.slide-body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.msg{font-size:26px;font-weight:700;line-height:1.3;margin:0 0 16px;letter-spacing:.01em;flex:none}
+.msg.sm{font-size:22px}
+.lead-note{font-size:16px;color:var(--ink-2);margin:-14px 0 20px;max-width:900px}
+h3{font-size:16px;font-weight:700;margin:14px 0 8px;color:var(--ink);letter-spacing:.02em}
+h3:first-child{margin-top:0}
+h3 .no{color:var(--accent);margin-right:7px}
+p{margin:0 0 10px;font-size:16px;line-height:1.5}
+ul,ol{margin:0 0 10px;padding-left:1.2em;font-size:16px;line-height:1.45}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--accent)}
+li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.src{font-size:16px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:16px;color:var(--ink-2);border-left:3px solid var(--hairline);padding:2px 0 2px 16px;margin:10px 0}
+
+/* layout helpers */
+.cols-2{display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+.cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 36px}
+.cols-5{display:grid;grid-template-columns:repeat(5,1fr);gap:0 22px}
+.vgap{margin-top:14px}
+
+/* table */
+.tbl table{width:100%;border-collapse:collapse;font-size:16px;line-height:1.25}
+.tbl th{font-size:16px;font-weight:700;text-align:left;padding:4px 14px;
+  border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+.tbl td{padding:4px 14px;border-bottom:1px solid var(--hairline);vertical-align:top}
+.tbl th.num,.tbl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tr.on td{background:var(--accent-tint);font-weight:700}
+.tbl caption{text-align:left;font-size:16px;font-weight:700;margin-bottom:10px;color:var(--ink-2)}
+
+/* KPI */
+.kpis{display:flex;margin:22px 0 6px}
+.kpi{padding:0 34px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:44px;font-weight:700;color:var(--accent);line-height:1.15;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:16px;font-weight:600;margin-left:3px;color:var(--ink)}
+.kpi .l{font-size:16px;color:var(--ink-3);margin-top:8px;letter-spacing:.02em;max-width:16em;line-height:1.6}
+
+/* eyebrow / part divider / cover */
+.slide.cover{padding:0;display:flex;flex-direction:column;justify-content:center}
+.cover-body{padding:0 88px}
+.cover .accent-bar{position:absolute;top:0;left:0;right:0;height:8px;background:var(--accent)}
+.cover .eyebrow{font-size:16px;letter-spacing:.22em;color:var(--ink-3);margin-bottom:30px;text-transform:uppercase}
+.cover h1{font-size:36px;line-height:1.6;margin:0 0 30px;font-weight:700;max-width:960px}
+.cover .to{font-size:16px;color:var(--ink-2);margin-bottom:6px}
+.cover .meta{margin-top:70px;font-size:16px;color:var(--ink-3);display:flex;gap:36px}
+.cover .meta span{border-top:1px solid var(--hairline);padding-top:8px;min-width:160px}
+
+.slide.divider{background:var(--accent);color:#fff;padding:0;display:flex;flex-direction:column;justify-content:center}
+.divider .pd-body{padding:0 88px}
+.divider .pd-no{font-size:16px;letter-spacing:.24em;opacity:.85;margin-bottom:22px}
+.divider h1{font-size:34px;font-weight:700;line-height:1.55;margin:0 0 18px;max-width:920px}
+.divider .pd-sub{font-size:16px;opacity:.9;max-width:760px;line-height:1.9}
+.divider .pd-index{margin-top:44px;font-size:16px;opacity:.7;letter-spacing:.05em}
+
+/* chevrons */
+.chevrons{display:flex;margin:16px 0}
+.chev{flex:1;padding:10px 14px 10px 28px;font-size:16px;font-weight:700;line-height:1.25;
+  text-align:center;background:var(--fill-gray);margin-left:5px;color:var(--ink);
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%,14px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:16px;font-weight:500;opacity:.85;margin-top:2px}
+
+/* roadmap */
+.roadmap{margin:14px 0}
+.rm-row{display:grid;grid-template-columns:160px repeat(12,1fr);align-items:center}
+.rm-row.rm-head{border-bottom:1px solid var(--ink)}
+.rm-h{font-size:16px;font-weight:700;color:var(--ink-3);text-align:center;padding:0 0 5px}
+.rm-row:not(.rm-head){border-bottom:1px solid var(--hairline);padding:4px 0}
+.rm-lane{font-size:16px;font-weight:700;padding-right:12px;line-height:1.15}
+.rm-bar{font-size:16px;font-weight:700;line-height:1.1;padding:3px 10px;background:var(--fill-gray);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm-bar.on{background:var(--accent);color:#fff}
+.rm-ms{font-size:16px;font-weight:700;color:var(--accent);white-space:nowrap;text-align:center}
+
+/* matrix */
+.matrix{display:grid;grid-template-columns:var(--mx-label,120px) repeat(var(--mx-cols,2),1fr);gap:8px 16px;margin:12px 0}
+.mx-h{font-size:16px;font-weight:700;color:var(--ink-2);text-align:center;align-self:end;
+  padding-bottom:4px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:2px;font-size:16px;font-weight:700;line-height:1.2;padding:6px 8px}
+.mx-label small{font-size:16px;font-weight:600;opacity:.75;letter-spacing:.06em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:16px;line-height:1.3}
+.mx-cell ul{margin:0}
+.mx-h.stage{border-bottom:0;background:var(--fill-gray);color:var(--ink);padding:9px 8px;line-height:1.4;
+  clip-path:polygon(0 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,0 100%,11px 50%)}
+.mx-h.stage.first{clip-path:polygon(0 0,calc(100% - 11px) 0,100% 50%,calc(100% - 11px) 100%,0 100%)}
+.mx-h.stage.on{background:var(--accent);color:#fff}
+
+/* quote card */
+.quote-card{border:1px solid var(--hairline);margin:0 0 12px}
+.qc-bar{background:var(--fill-gray);padding:6px 14px;display:flex;align-items:center;gap:6px}
+.qc-dot{width:7px;height:7px;border-radius:50%;background:#b7bac0}
+.qc-url{margin-left:10px;font-size:16px;color:var(--ink-3);font-family:"Courier New",monospace;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qc-body{padding:12px 16px}
+.qc-media{font-size:16px;font-weight:700;color:var(--accent);letter-spacing:.05em;margin-bottom:5px}
+.qc-headline{font-size:16px;font-weight:700;line-height:1.3;margin-bottom:6px}
+.qc-excerpt{font-size:16px;color:var(--ink-2);line-height:1.4;margin:0}
+
+/* svg chart */
+.chart-wrap{margin:12px 0}
+figcaption{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--ink-2)}
+
+/* pill / step badge */
+.step-badge{display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;
+  background:var(--accent);color:#fff;font-size:16px;font-weight:700;border-radius:50%;margin-right:10px}
+
+@media print{
+  body{background:#fff}
+  .deck{padding:0}
+  .slide{margin:0;border:0;page-break-after:always;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ============ P1 表紙 ============ -->
+<section class="slide cover">
+  <div class="accent-bar"></div>
+  <div class="cover-body">
+    <p class="eyebrow">Public Relations Retainer Proposal ／ 社外秘</p>
+    <h1>攻めのPRを実現する、<br>広報体制の基盤アップデート</h1>
+    <p class="to">NTTドコモ株式会社 御中</p>
+    <div class="meta">
+      <span>提出日：20XX年XX月XX日</span>
+      <span>提出者：〇〇〇〇株式会社</span>
+      <span>ご担当：広報部 〇〇 〇〇 様</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ P2 目次 ============ -->
+<section class="slide">
+  <div class="slide-head">
+    <span class="slide-part">Contents</span>
+    <span class="slide-sub">広報体制の基盤アップデート提案</span>
+  </div>
+  
+  <div class="slide-body"><p class="msg">ご提案は、井之上喬「自己修正型ライフサイクル・モデル」の9段階に沿って構成している</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:60px">段階</th><th>内容</th><th style="width:90px" class="num">該当頁</th></tr></thead>
+      <tbody>
+        <tr><td class="num">01</td><td>全体目標（ゴール）の設定</td><td class="num">P3</td></tr>
+        <tr><td class="num">02</td><td>リサーチ＆シチュエーション・アナリシス（現状分析）</td><td class="num">P4–P9</td></tr>
+        <tr><td class="num">03</td><td>PR目標の設定</td><td class="num">P10</td></tr>
+        <tr><td class="num">04</td><td>ターゲットの設定</td><td class="num">P11–P16</td></tr>
+        <tr><td class="num">05</td><td>PR戦略の構築</td><td class="num">P17–P20</td></tr>
+        <tr><td class="num">06</td><td>プログラムの作成</td><td class="num">P21–P29</td></tr>
+        <tr><td class="num">07</td><td>プログラムの実施</td><td class="num">P30–P31</td></tr>
+        <tr><td class="num">08</td><td>分析・評価</td><td class="num">P32</td></tr>
+        <tr><td class="num">09</td><td>自己修正</td><td class="num">P33–P34</td></tr>
+        <tr><td class="num">–</td><td>Appendix：メディアトレーニング</td><td class="num">A1–A5</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note vgap">本モデルは環をなす継続的な活動であり、自己修正機能によってスパイラル的に高度化する構造である。出典：井之上喬「自己修正型ライフサイクル・モデル」（<a href="https://inoueblog.com/blog/public-relations/36/" style="color:inherit">井之上ブログ</a>）</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>02 / 42</span></div>
+</section>
+
+<!-- ============ PART1 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 01</p>
+    <h1>全体目標（ゴール）の設定</h1>
+    <p class="pd-sub">本提案が経営目標のどこに接続するのかを、はじめに定義する。</p>
+    <p class="pd-index">GOAL SETTING</p>
+  </div>
+</section>
+
+<!-- ============ P3 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 01｜全体目標の設定</span><span class="slide-sub">P3</span></div>
+  <div class="slide-body"><p class="msg">コーポレートPRを通じて、経営目標の達成を後押しする</p>
+  <div class="cols-2">
+    <div>
+      <h3><span class="no">01</span>企業価値・株価の向上</h3>
+      <p>経営陣は株主総会において、業績改善が株価上昇の最大の原動力である旨を明言している。コーポレートPRは、この業績改善のストーリーを市場・投資家に正しく届ける役割を担う。</p>
+      <h3><span class="no">02</span>中期経営目標（2030年度）の達成後押し</h3>
+      <p>スマートライフ・法人事業5兆円、EBITDA2兆円という数値目標には、AIOWN・金融事業等の新戦略が社会に正しく理解・受容されることが前提となる。</p>
+    </div>
+    <div>
+      <h3><span class="no">03</span>競争環境における信頼の積み重ね</h3>
+      <p>通信キャリア各社が激しく発信を行う環境下で、一貫した情報発信を積み重ねることが、中長期的な信頼構築につながる。</p>
+      <h3><span class="no">04</span>通信品質改善への社会的信頼の後押し</h3>
+      <p>通信品質改善という重点施策の進捗を継続的に発信することで、生活者・社会からの信頼獲得を後押しする。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>04 / 42</span></div>
+</section>
+
+<!-- ============ PART2 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 02</p>
+    <h1>リサーチ＆シチュエーション・アナリシス</h1>
+    <p class="pd-sub">過去1年間・約16,000件超の露出データを独自に定量分析し、現状の発信構造を確認する。</p>
+    <p class="pd-index">RESEARCH &amp; SITUATION ANALYSIS</p>
+  </div>
+</section>
+
+<!-- ============ P4 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P4</span></div>
+  
+  <div class="slide-body"><p class="msg">発信の"量"は、既に業界をリードしている</p>
+  <div class="cols-2">
+    <div>
+      <figure class="chart-wrap">
+        <figcaption>図表1｜Web「発表・開始」系記事比率（3社比較）</figcaption>
+        <svg viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
+          <line x1="140" y1="10" x2="140" y2="170" stroke="#d9d9d9"/>
+          <!-- ドコモ -->
+          <text x="0" y="34" font-size="12" fill="#1a1a1a" font-weight="700">ドコモ</text>
+          <rect x="140" y="18" width="360" height="26" fill="#b0242c"/>
+          <text x="508" y="36" font-size="13" fill="#b0242c" font-weight="700" text-anchor="end">14.0%</text>
+          <!-- KDDI -->
+          <text x="0" y="94" font-size="12" fill="#1a1a1a">KDDI</text>
+          <rect x="140" y="78" width="345" height="26" fill="#c9ccd1"/>
+          <text x="493" y="96" font-size="13" fill="#555" text-anchor="end">13.4%</text>
+          <!-- ソフトバンク -->
+          <text x="0" y="154" font-size="12" fill="#1a1a1a">ソフトバンク</text>
+          <rect x="140" y="138" width="144" height="26" fill="#c9ccd1"/>
+          <text x="292" y="156" font-size="13" fill="#555" text-anchor="end">5.6%</text>
+        </svg>
+        <p class="src">出所：自社独自分析（2025年8月13日〜2026年8月10日・3社共通期間のWeb/新聞編集記事、KDDIは欠落分データを追加取得済み）。決算数表・法定開示・リリース転載を除いた編集記事のうち、告知キーワード含有記事の比率。3社中、ドコモが最高水準</p>
+      </figure>
+    </div>
+    <div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">6.1<small>%</small></div><div class="l">自己PR系記事比率（3社中2位、KDDI6.9%が僅差で最高）</div></div>
+      </div>
+      <p class="vgap">「発表・開始」系記事はドコモが3社の中で最も高い比率を確保している。一方、自己PR系記事比率はKDDIがわずかに上回っており、この指標では僅差の2位にとどまる。全体として、日々の取り組みを発信する運動量は業界トップ水準にある。</p>
+      <p class="note">この量の強みを土台に、次はテレビでの拡がりと有事対応力という2つの伸びしろに着目する。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>06 / 42</span></div>
+</section>
+
+<!-- ============ P5 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P5</span></div>
+  <div class="slide-body"><p class="msg">テレビでの拡がりには、まだ伸びしろがある</p>
+  <div class="cols-3">
+    <div class="kpi" style="padding-left:0">
+      <div class="v">332<small>件</small></div>
+      <div class="l">TV露出件数（過去1年間・主要6局）</div>
+    </div>
+    <div class="kpi">
+      <div class="v">27.4<small>%</small></div>
+      <div class="l">TVポジティブ比率（業界内最高水準は48%台）</div>
+    </div>
+    <div class="kpi">
+      <div class="v">44<small>番組</small></div>
+      <div class="l">ポジティブ露出番組数（業界内最多は78番組）</div>
+    </div>
+  </div>
+  <p class="vgap">Webでの発信量が業界をリードする一方、テレビというチャネルでの拡がりには、まだ拡大の余地がある。ここに、Webで確立した発信の"型"をテレビにも波及させる機会がある。</p>
+  <p class="note">一部の比較値は市況コーナー等での言及を含む可能性があるため、絶対数の優劣比較よりも「反復波及の型」を主たる参考情報として扱う。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>07 / 42</span></div>
+</section>
+
+<!-- ============ P6 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P6</span></div>
+  <div class="slide-body"><p class="msg">発信力に加えて、有事の場面での備えも企業価値を支える要素である</p>
+  <div class="cols-2">
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">k-tai.watch.impress.co.jp</span></div>
+      <div class="qc-body">
+        <p class="qc-media">ケータイWatch</p>
+        <p class="qc-headline">「au通信障害」KDDI髙橋社長の会見質疑詳報、なにが起きたのか</p>
+        <p class="qc-excerpt">通信障害発生時における記者会見の質疑応答の詳細を報じた記事。技術的な質問への対応を含む会見の全容を伝えている。</p>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">president.jp</span></div>
+      <div class="qc-body">
+        <p class="qc-media">PRESIDENT Online</p>
+        <p class="qc-headline">なぜ日本の大企業はKDDIのような記者会見ができないのか</p>
+        <p class="qc-excerpt">対応力の差は「社長個人の能力の優劣ではない」という論点で、企業の会見対応力を構造的に論じた記事。</p>
+      </div>
+    </div>
+  </div>
+  <p class="note vgap">上記は事実（見出し・出典）のみを提示している。有事対応力は個社の巧拙ではなく、業界全体で起こりうる構造的なテーマとして捉えられる。準備の考え方の詳細は、Appendix「メディアトレーニング」で補足する。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>08 / 42</span></div>
+</section>
+
+<!-- ============ P7 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P7</span></div>
+  <div class="slide-body"><p class="msg">平常時の発信と有事の対応、この両方をつなぐ視点に、大きな可能性がある</p>
+  <div class="chevrons vgap">
+    <div class="chev on">平常時<small>看板テーマ設計</small></div>
+    <div class="chev on">有事<small>対応力の備え</small></div>
+    <div class="chev on">一貫した運用体制<small>継続的なPR活動</small></div>
+  </div>
+  <div class="cols-2 vgap">
+    <div>
+      <p>平常時に一貫したテーマ（看板ナラティブ）で発信を積み重ねることは、有事における説明の"土台"にもなる。平常時と有事は切り離された活動ではなく、一つの運用体制でつながっている。</p>
+    </div>
+    <div>
+      <p>この視点に立つと、Part2で確認した「量の強み（発信①）」「テレビの伸びしろ（発見②）」「有事対応の備え（発見③）」は、すべて同じ運用体制のアップデートによって同時に強化できることがわかる。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>09 / 42</span></div>
+</section>
+
+<!-- ============ P8 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P8</span></div>
+  
+  <div class="slide-body"><p class="msg">①通信品質　②AIOWN　③金融　④防災　⑤ファンダム——経営が掲げる5つの重要領域</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:150px">優先テーマ</th><th>根拠</th><th style="width:150px">位置づけ</th></tr></thead>
+      <tbody>
+        <tr><td><b>①通信品質改善</b></td><td>前田社長が2024年就任以来「最優先課題」と明言。2026年度も基地局2,500局増設等を継続</td><td>経営の重点施策</td></tr>
+        <tr><td><b>②AIOWN</b><br>（AI×次世代インフラ）</td><td>2026年5月にNTTグループが中期戦略を更新、「AIOWN」を旗印に。ドコモは2030年度スマートライフ・法人事業5兆円目標の牽引役</td><td>グループ最上位の成長戦略</td></tr>
+        <tr><td><b>③金融事業拡大</b></td><td>d NEOBANK（2026年8月開始）、dカード・ドコモでんき各100万契約突破</td><td>経済圏戦略の実行フェーズ</td></tr>
+        <tr><td><b>④防災・レジリエンス</b></td><td>前田社長年頭所感で「災害時の通信確保は社会の生命線」と明言</td><td>社会的意義の高い取り組み</td></tr>
+        <tr><td><b>⑤ファンダム戦略</b></td><td>「ドコモMAX」×DAZN統合、スポーツファン4000万人市場への価値訴求。前田社長が「新たなチャレンジ」と明言</td><td>前田社長が明言する新機軸</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="src vgap">出所：NTTドコモ前田社長 年頭所感2026／NTTグループ中期経営戦略／NTT株主総会記事／前田社長インタビュー（通信品質の現在地）／前田社長インタビュー（ファンダム戦略）</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>10 / 42</span></div>
+</section>
+
+<!-- ============ P9 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 02｜現状分析</span><span class="slide-sub">P9</span></div>
+  
+  <div class="slide-body"><p class="msg">強みを、さらに大きな価値に変えていくための土台が整理できた</p>
+  <div class="chevrons vgap">
+    <div class="chev on">発見①<small>発信量は業界リード</small></div>
+    <div class="chev on">発見②<small>TV拡大に伸びしろ</small></div>
+    <div class="chev on">発見③<small>有事対応力の備え</small></div>
+    <div class="chev on">発見④<small>平時と有事の接続</small></div>
+  </div>
+  <div class="cols-2 vgap">
+    <div>
+      <h3>整理された現状</h3>
+      <ul>
+        <li>Webでの発信量（「発表・開始」系比率）は3社中最高水準、自己PR比率はKDDIに次ぐ2位</li>
+        <li>テレビでの拡がりには拡大余地があり、Webの型を波及させる機会がある</li>
+        <li>有事対応力は業界全体の構造的テーマとして備えられる</li>
+        <li>平時と有事は一つの運用体制でつながる</li>
+      </ul>
+    </div>
+    <div>
+      <h3>経営の重要領域（P8再掲）</h3>
+      <p>①通信品質改善　②AIOWN　③金融事業拡大　④防災・レジリエンス　⑤ファンダム戦略</p>
+      <p class="note">この5つの重要領域を、Part3以降でひとつの経営ストーリーとして束ね、ターゲットごとの戦略に接続していく。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>11 / 42</span></div>
+</section>
+
+<!-- ============ PART3 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 03</p>
+    <h1>PR目標の設定</h1>
+    <p class="pd-sub">個々の取り組みを、一貫した経営ストーリーへと束ねる。</p>
+    <p class="pd-index">PR OBJECTIVE</p>
+  </div>
+</section>
+
+<!-- ============ P10 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 03｜PR目標の設定</span><span class="slide-sub">P10</span></div>
+  <div class="slide-body"><p class="msg">一つひとつの挑戦を、"ドコモらしさ"という一本の軸でつなぎ、ファンを増やす</p>
+  <div class="cols-2">
+    <div>
+      <h3><span class="no">01</span>現状の認識課題</h3>
+      <p>通信品質改善・AIOWN・金融・防災・ファンダム等の取り組みが、それぞれ単発の発表・対応として受け止められ、「ドコモが何を目指している会社なのか」という一貫した像が伝わっていない。</p>
+      <h3><span class="no">02</span>獲得したい認知</h3>
+      <p>「ドコモは今、明確な意志を持って変わろうとしている会社だ」という、経営ストーリー全体への共感を獲得する。</p>
+    </div>
+    <div>
+      <h3><span class="no">03</span>期待する行動変容</h3>
+      <ul>
+        <li>コンシューマー：能動的な支持・言及</li>
+        <li>投資家：確信に基づく評価・保有継続</li>
+        <li>法人・パートナー：協業意欲の向上</li>
+        <li>メディア：継続的な関心（各ステークホルダーの"ファン化"）</li>
+      </ul>
+      <h3><span class="no">04</span>ナラティブとの接続</h3>
+      <p>②AIOWN・③金融・④防災・⑤ファンダムは、一つの経営ストーリーを構成する"章（チャプター）"として位置づける。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>13 / 42</span></div>
+</section>
+
+<!-- ============ PART4 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 04</p>
+    <h1>ターゲットの設定</h1>
+    <p class="pd-sub">経営ストーリーを届ける5つのビジネスステークホルダーを定義する。</p>
+    <p class="pd-index">TARGET DEFINITION</p>
+  </div>
+</section>
+
+<!-- ============ P11 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 04｜ターゲットの設定</span><span class="slide-sub">P11</span></div>
+  <div class="slide-body"><p class="msg">5層のビジネスステークホルダーに、それぞれの角度からストーリーを届ける</p>
+  <div class="cols-5 vgap">
+    <div><div class="step-badge">1</div><b>コンシューマー</b><p style="margin-top:8px">個人の生活者・契約者</p></div>
+    <div><div class="step-badge">2</div><b>投資家・株主</b><p style="margin-top:8px">機関投資家・個人株主</p></div>
+    <div><div class="step-badge">3</div><b>法人顧客<br>パートナー企業</b><p style="margin-top:8px">協業・契約検討先</p></div>
+    <div><div class="step-badge">4</div><b>自治体・防災<br>関連ステークホルダー</b><p style="margin-top:8px">連携協定先等</p></div>
+    <div><div class="step-badge">5</div><b>メディア関係者</b><p style="margin-top:8px">記者・番組制作者</p></div>
+  </div>
+  <p class="note vgap">Part5以降では、この5層それぞれについて「現状」「経営ゴールとの接続」「親和性の高いナラティブ」を整理する。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>15 / 42</span></div>
+</section>
+
+<!-- ============ P12-P14 ターゲット詳細1/2（matrix使用） ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 04｜ターゲットの設定</span><span class="slide-sub">P12–P14</span></div>
+  <div class="slide-body"><p class="msg">ターゲット詳細｜①コンシューマー　②投資家・株主　③法人顧客・パートナー企業</p>
+  <div class="matrix" style="--mx-cols:3;--mx-label:150px">
+    <div></div>
+    <div class="mx-h">現状</div>
+    <div class="mx-h">経営ゴールとの接続</div>
+    <div class="mx-h">親和性の高いナラティブ</div>
+    <div class="mx-label"><small>TARGET 01</small>コンシューマー</div>
+    <div class="mx-cell">値上げ・通信品質・災害時の不安が先行するイメージ</div>
+    <div class="mx-cell">解約抑制・契約継続</div>
+    <div class="mx-cell"><b class="em">④防災レジリエンス</b><br>災害時の通信確保という不安に直接応える</div>
+    <div class="mx-label alt"><small>TARGET 02</small>投資家・株主</div>
+    <div class="mx-cell">減収減益・成長戦略の実効性への関心</div>
+    <div class="mx-cell">株式保有継続・株価評価改善</div>
+    <div class="mx-cell"><b class="em">②AIOWN</b><br>中期経営目標の社会実装の進捗として伝える</div>
+    <div class="mx-label"><small>TARGET 03</small>法人顧客<br>パートナー企業</div>
+    <div class="mx-cell">AI・次世代インフラ領域でのリーダーシップが十分に伝わっていない</div>
+    <div class="mx-cell">法人契約・協業検討の増加</div>
+    <div class="mx-cell"><b class="em">②AIOWN</b><br>具体的なソリューション事例の発信が後押しになる</div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>16 / 42</span></div>
+</section>
+
+<!-- ============ P15-P16 ターゲット詳細2/2 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 04｜ターゲットの設定</span><span class="slide-sub">P15–P16</span></div>
+  <div class="slide-body"><p class="msg">ターゲット詳細｜④自治体・防災関連ステークホルダー　⑤メディア関係者</p>
+  <div class="matrix" style="--mx-cols:3;--mx-label:150px">
+    <div></div>
+    <div class="mx-h">現状</div>
+    <div class="mx-h">経営ゴールとの接続／目指す関係性</div>
+    <div class="mx-h">親和性の高いナラティブ</div>
+    <div class="mx-label"><small>TARGET 04</small>自治体・防災<br>関連ステークホルダー</div>
+    <div class="mx-cell">JAPANローミング等の取り組みの認知度が十分に高まっていない</div>
+    <div class="mx-cell">自治体との防災連携協定の拡大</div>
+    <div class="mx-cell"><b class="em">④防災レジリエンス</b><br>既にある実績の認知を高めることが連携拡大の入口になる</div>
+    <div class="mx-label alt"><small>TARGET 05</small>メディア関係者</div>
+    <div class="mx-cell">単発の発表窓口としての関係にとどまっている</div>
+    <div class="mx-cell">継続的に価値ある情報を提供する、信頼できる取材対象</div>
+    <div class="mx-cell"><b class="em">④を主軸に②③⑤を供給</b><br>定点観測ネタとして継続的に提供する</div>
+  </div>
+  <p class="note vgap">5層すべてのターゲット整理が完了した。Part5では、これらの現状と接続をもとに、具体的なPR戦略（ストーリーテリング戦略）を構築する。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>17 / 42</span></div>
+</section>
+
+<!-- ============ PART5 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 05</p>
+    <h1>PR戦略の構築</h1>
+    <p class="pd-sub">ストーリーテリング戦略として、ナラティブを設計する。</p>
+    <p class="pd-index">STRATEGY DESIGN</p>
+  </div>
+</section>
+
+<!-- ============ P17 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 05｜PR戦略の構築</span><span class="slide-sub">P17</span></div>
+  
+  <div class="slide-body"><p class="msg">PR目標で定義したファン化を、どのような物語を通じて実現するか</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:150px">ターゲット</th><th>獲得したい認知</th><th>期待する行動変容</th><th style="width:130px">対応するナラティブ</th></tr></thead>
+      <tbody>
+        <tr><td>コンシューマー</td><td>災害時にも支えてくれる、品質改善に本気の会社</td><td>解約抑制・契約継続</td><td>④防災レジリエンス</td></tr>
+        <tr><td>投資家・株主</td><td>中期経営目標が着実に社会実装されている</td><td>株式保有継続・株価評価改善</td><td>②AIOWN</td></tr>
+        <tr><td>法人顧客・パートナー企業</td><td>AIOWN基盤で法人ソリューションをリードする会社</td><td>法人契約・協業検討の増加</td><td>②AIOWN</td></tr>
+        <tr><td>自治体・防災関連ステークホルダー</td><td>災害時に頼れるインフラパートナー</td><td>防災連携協定の拡大</td><td>④防災レジリエンス</td></tr>
+        <tr><td>メディア関係者</td><td>継続的に価値ある情報をくれる取材対象</td><td>能動的な取材依頼への発展</td><td>④を主軸に②③⑤を定点観測ネタとして供給</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note vgap">4つのナラティブは独立した選択肢ではなく、一つの経営ストーリーを構成する"章"として位置づける。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>19 / 42</span></div>
+</section>
+
+<!-- ============ P18 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 05｜PR戦略の構築</span><span class="slide-sub">P18</span></div>
+  
+  <div class="slide-body"><p class="msg">4つの章を並べた上で、④防災を起点に②AIOWNを次章として育てることを推奨する</p>
+  <div class="matrix" style="--mx-cols:3;--mx-label:120px;gap:9px 20px">
+    <div></div>
+    <div class="mx-h">②AIOWN</div>
+    <div class="mx-h">③金融事業拡大</div>
+    <div class="mx-h">④防災レジリエンス</div>
+    <div class="mx-label"><small>評価軸</small>経営優先度</div>
+    <div class="mx-cell">最高</div><div class="mx-cell">高</div><div class="mx-cell">中</div>
+    <div class="mx-label alt"><small>評価軸</small>実績・反復性</div>
+    <div class="mx-cell">低</div><div class="mx-cell">中</div><div class="mx-cell">高</div>
+    <div class="mx-label"><small>評価軸</small>メディア波及力</div>
+    <div class="mx-cell">低</div><div class="mx-cell">低〜中</div><div class="mx-cell">高</div>
+    <div class="mx-label alt"><small>着眼</small>強み</div>
+    <div class="mx-cell">経営の最上位戦略と完全に整合。投資規模が数字として伝わる</div>
+    <div class="mx-cell">TVに複数回取り上げられた実績あり。d NEOBANK始動でニュースフックが作りやすい</div>
+    <div class="mx-cell">素材が豊富かつ自然発生的（熊本地震・台風・山林火災）。着手しやすい機会</div>
+    <div class="mx-label"><small>着眼</small>留意点</div>
+    <div class="mx-cell">専門性が高く翻訳者（顔）が必要。グループ広報・IR部門との連携が前提</div>
+    <div class="mx-cell">規制業種でコンプライアンスチェックに時間を要する</div>
+    <div class="mx-cell">JAPANローミングは4社共同の枠組みで独自性の担保に工夫が必要</div>
+  </div>
+  <p class="note" style="margin-top:12px">※⑤ファンダム戦略（経営優先度：中〜高／実績・反復性：低〜中／波及力：高、強み＝前田社長本人が力点を置く新機軸でテレビ・ローカル局と相性が良い／留意点＝DAZN統合は新しい取り組みで実績はこれから）は次頁以降で個別に整理</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>20 / 42</span></div>
+</section>
+
+<!-- ============ P19-P20 統合 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 05｜PR戦略の構築</span><span class="slide-sub">P19–P20</span></div>
+  
+  <div class="slide-body"><p class="msg">ナラティブ設計｜主力（④防災レジリエンス）を軸に、補完（②AIOWN）を次章として育てる</p>
+  <div class="cols-3">
+    <div>
+      <h3><span class="no">01</span>看板ナラティブの選定</h3>
+      <p>熊本地震・台風・山林火災で他社回線を無償開放する「JAPANローミング」の実績が年数回発生している。現在は「通信障害」の文脈に埋もれやすい状態だが、主語を取り戻すだけで転換できる、コストパフォーマンスの高い機会である。</p>
+      <h3><span class="no">02</span>スポークスパーソン戦略</h3>
+      <p>前田様の発信機会を、より一貫した形で積み重ねる。平時から語ることで、有事の会見が「いつもの説明の延長」になる（本人の意向確認が前提）。</p>
+    </div>
+    <div>
+      <h3><span class="no">03</span>月次運用への接続</h3>
+      <div class="chevrons" style="flex-direction:column">
+        <div class="chev on" style="margin-left:0;margin-bottom:5px">①露出モニタリング<small>直近1ヶ月</small></div>
+        <div class="chev on" style="margin-left:0;margin-bottom:5px">②メディアピッチ設計<small>次月・定点観測ネタ出し</small></div>
+        <div class="chev on" style="margin-left:0">③スポークスパーソン準備<small>年間カレンダーで確保</small></div>
+      </div>
+      <p class="note vgap">モニタリング→ネタ出し→発信機会確保、という循環で運用する。</p>
+    </div>
+    <div>
+      <h3><span class="no">04</span>補完ナラティブ（②AIOWN）</h3>
+      <p>④の運用が軌道に乗った段階で、②AIOWNを次章として立ち上げる。確立した月次運用の型をそのまま転用でき、立ち上げの負荷を抑えられる。</p>
+      <h3>主なターゲット</h3>
+      <ul>
+        <li>投資家・株主：中期経営目標の社会実装の証跡として</li>
+        <li>法人顧客・パートナー企業：AIOWN基盤の具体ソリューションとして</li>
+      </ul>
+      <p class="note">グループ広報・IR部門との連携が前提となるため、実行体制（P27）で連携方法をあわせて設計する。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>21 / 42</span></div>
+</section>
+
+<!-- ============ PART6 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 06</p>
+    <h1>プログラムの作成</h1>
+    <p class="pd-sub">年間カレンダー・媒体リスト・実行体制まで、具体の運用設計に落とし込む。</p>
+    <p class="pd-index">PROGRAM DESIGN</p>
+  </div>
+</section>
+
+<!-- ============ P21 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P21</span></div>
+  
+  <div class="slide-body"><p class="msg">行き当たりばったりから、設計されたリズムへ</p>
+  <div class="roadmap">
+    <div class="rm-row rm-head">
+      <div class="rm-lane"></div>
+      <div class="rm-h">4月</div><div class="rm-h">5月</div><div class="rm-h">6月</div>
+      <div class="rm-h">7月</div><div class="rm-h">8月</div><div class="rm-h">9月</div>
+      <div class="rm-h">10月</div><div class="rm-h">11月</div><div class="rm-h">12月</div>
+      <div class="rm-h">1月</div><div class="rm-h">2月</div><div class="rm-h">3月</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">決算発表起点</div>
+      <div class="rm-ms" style="grid-column:3">◆5月</div><div></div>
+      <div class="rm-ms" style="grid-column:6">◆8月</div><div></div><div></div>
+      <div class="rm-ms" style="grid-column:9">◆11月</div><div></div><div></div>
+      <div class="rm-ms" style="grid-column:12">◆2月</div><div></div><div></div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">メイン発信（④防災）</div>
+      <div class="rm-bar on" style="grid-column:6/8">台風シーズン特集</div>
+      <div class="rm-bar on" style="grid-column:9/10">防災の日連動</div>
+      <div class="rm-bar" style="grid-column:1/3"></div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">サブ発信（②③⑤）</div>
+      <div class="rm-bar" style="grid-column:2/4">AIOWN進捗</div>
+      <div class="rm-bar" style="grid-column:5/6">金融四半期報告</div>
+      <div class="rm-bar" style="grid-column:10/13">年末年始ファンダム</div>
+    </div>
+  </div>
+  <div class="cols-2 vgap" style="font-size:16px">
+    <ul>
+      <li>各四半期にメイン発信1本、サブ発信月1〜2本</li>
+      <li>決算発表（2月・5月・8月・11月）を起点に、前後2週間は各媒体が特集を組みやすいタイミングとして材料を厚めに投下</li>
+    </ul>
+    <ul>
+      <li>業界イベント・季節性（防災の日9/1、台風シーズン、年末年始のスポーツイベント等）に選定ナラティブを紐付け</li>
+      <li>毎月必ず何かしらの発信がある状態を作る</li>
+    </ul>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>23 / 42</span></div>
+</section>
+
+<!-- ============ P22 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P22</span></div>
+  
+  <div class="slide-body"><p class="msg">全国紙・通信社（部署レベル）</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:220px">媒体</th><th style="width:220px">担当部署</th><th>備考</th></tr></thead>
+      <tbody>
+        <tr><td>日本経済新聞（電子版含む）</td><td>企業報道部／総務省担当（経済部）</td><td>決算・値上げ等の一次報道の起点</td></tr>
+        <tr><td>読売新聞（東京・大阪本社）</td><td>経済部（総務省記者クラブ）</td><td>災害関連は社会部との接点も検討</td></tr>
+        <tr><td>朝日新聞</td><td>経済部</td><td>–</td></tr>
+        <tr><td>毎日新聞</td><td>経済部</td><td>–</td></tr>
+        <tr><td>産経新聞（東京・大阪本社）</td><td>経済部</td><td>–</td></tr>
+        <tr><td>共同通信</td><td>経済部</td><td>加盟地方紙への配信元。地方展開で波及力が高い</td></tr>
+        <tr><td>時事通信</td><td>経済部</td><td>–</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note vgap">経済番組・全国紙アプローチ：発表の1〜3日前にオフレコで個別ブリーフィングを実施。定点観測ネタは同じ窓口に"連載"として持ち込み、担当記者との関係を固定化。独占情報のローテーション供与により関係資本を積み重ねる。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>24 / 42</span></div>
+</section>
+
+<!-- ============ P23 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P23</span></div>
+  
+  <div class="slide-body"><p class="msg">テレビ番組（優先度別）</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:80px">優先度</th><th style="width:230px">番組名</th><th style="width:140px">放送局</th><th>ジャンル・相性</th></tr></thead>
+      <tbody>
+        <tr class="on"><td>最優先</td><td>モーニングサテライト</td><td>テレビ東京</td><td>経済専門番組。②AIOWN・③金融の定点観測リリースの主戦場</td></tr>
+        <tr class="on"><td>最優先</td><td>ワールドビジネスサテライト（WBS）</td><td>テレビ東京</td><td>夕方の看板経済番組</td></tr>
+        <tr><td>高</td><td>グッド！モーニング</td><td>テレビ朝日</td><td>朝の情報番組。④防災・生活密着ネタに強い</td></tr>
+        <tr><td>高</td><td>スーパーJチャンネル</td><td>テレビ朝日</td><td>夕方ニュース。速報系に強い</td></tr>
+        <tr><td>高</td><td>Ｎスタ</td><td>TBSテレビ</td><td>夕方ニュース。生活密着・防災ネタとの相性良好</td></tr>
+        <tr><td>中</td><td>NHKニュース おはよう日本</td><td>NHK総合</td><td>信頼性の高い情報番組</td></tr>
+        <tr><td>中</td><td>大下容子ワイド！スクランブル</td><td>テレビ朝日</td><td>スポークスパーソンの人物露出に活用余地</td></tr>
+        <tr><td>中</td><td>めざましテレビ／イット！</td><td>フジテレビ</td><td>⑤ファンダムとの親和性が高い</td></tr>
+        <tr><td>中</td><td>ZIP！</td><td>日本テレビ</td><td>生活者目線のネタに強い</td></tr>
+        <tr><td>中</td><td>THE TIME,／ひるおび</td><td>テレビ朝日／TBSテレビ</td><td>日中の情報・ニュース番組</td></tr>
+        <tr><td>開拓枠</td><td>ガイアの夜明け／カンブリア宮殿</td><td>テレビ東京</td><td>②AIOWNのような大型戦略ストーリーの単発特集に向く</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>25 / 42</span></div>
+</section>
+
+<!-- ============ P24 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P24</span></div>
+  
+  <div class="slide-body"><p class="msg">Webメディア（カテゴリ網羅・全リスト）</p>
+  <div class="cols-2" style="font-size:16px;line-height:1.65">
+    <div>
+      <h3 style="font-size:16px">IT・モバイル専門</h3>
+      <p style="font-size:16px">ITmedia Mobile／NEWS／ビジネスオンライン／エンタープライズ、ケータイWatch、Impress Watch系（INTERNET Watch／PC Watch／クラウドWatch／Car Watch／AV Watch）、CNET Japan、ZDNET Japan、日経クロステック、日経クロストレンド、＠IT、ASCII.jp／週刊ASCII、RBB TODAY、週刊BCN＋、GIGAZINE、GIZMODO、価格.comマガジン、lifehacker、Get Navi、mybest、the360.life</p>
+      <h3 style="font-size:16px">ビジネス・経済</h3>
+      <p style="font-size:16px">日本経済新聞電子版、日経ビジネス電子版、JBpress、東洋経済オンライン、ダイヤモンドオンライン、プレジデントオンライン／PRESIDENT WOMAN、NewsPicks、BUSINESS INSIDER JAPAN、新R25、AMP、Newsweek Online、流通ニュース、日本ネット経済新聞、ネットショップ担当者フォーラム、あたらしい経済、ハフポスト</p>
+      <h3 style="font-size:16px">新聞・通信社</h3>
+      <p style="font-size:16px">毎日新聞、Yomiuri Online、日経電子版、産経ニュース、iza！、zakzak、時事ドットコム、朝日新聞デジタル、AERA DIGITAL、日刊工業新聞電子版、ニュースイッチ、共同通信ニュース、時事通信ニュース</p>
+    </div>
+    <div>
+      <h3 style="font-size:16px">ニュース・情報総合</h3>
+      <p style="font-size:16px">＠nifty、livedoorニュース、exciteニュース、はてなニュース、J-CASTニュース、All About、withnews、FNN.jpプライムオンライン、ニコニコニュース、アメーバニュース、デイリー新潮、日刊サイゾー、NEWSポストセブン、STRAIGHT PRESS、財経新聞、MAG2NEWS、ガベージニュース、GLOBE+、AFP BB NEWS、まいどなニュース、NewSphere</p>
+      <h3 style="font-size:16px">バイラル・エンタメ／広告マーケ／ポータル配信</h3>
+      <p style="font-size:16px">Sirabee、ロケットニュース24、ねとらぼ、デイリーポータルZ、BuzzFeed Japan、grape／AdverTimes、WEB担当者Forum、MarkeZine、日経クロストレンド、電通報／PR TIMES、＠Press、PR Newswire（日本語）</p>
+      <h3 style="font-size:16px">スポーツ紙・芸能・地域</h3>
+      <p style="font-size:16px">SPONICHI ANNEX、デイリースポーツonline、日刊スポーツ、スポーツ報知、SANSPO.COM、東スポWEB／テレ朝News、日テレNEWS24、ORICON NEWS、modelpress、めざましmedia／銀座経済新聞、シブヤ経済新聞、Walker Plus</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>26 / 42</span></div>
+</section>
+
+<!-- ============ P25-P26 統合 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P25–P26</span></div>
+  
+  <div class="slide-body"><p class="msg">メディア活用とコンテンツフォーマットの標準化</p>
+  <div class="cols-2">
+    <div>
+      <h3><span class="no">01</span>ローカル局・地方紙</h3>
+      <p>④防災や⑤ファンダム（J1〜J3クラブ提携）と相性が良いチャネルである。支社・支店単位でのローカル情報提供の仕組みを構築する。</p>
+      <h3><span class="no">02</span>専門メディア</h3>
+      <p>既に露出量が最も多い層である。深掘りの場として活用し、一般メディアが後追いする際の一次情報源として機能させる。</p>
+    </div>
+    <div>
+      <h3><span class="no">03</span>定点観測リリースのテンプレート化</h3>
+      <p>毎月同じフォーマット（指標・グラフ・コメント）。例：JAPANローミング提供実績レポートの四半期発行。</p>
+      <h3><span class="no">04</span>スポークスパーソンのメディアキット</h3>
+      <p>想定問答集を四半期ごとに更新。キーメッセージを3つに絞る。</p>
+      <h3><span class="no">05</span>ビジュアル・現場素材</h3>
+      <p>基地局工事現場、AIオペレーションセンター等への記者・カメラクルー招待（プレスツアー）を定例化する。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>27 / 42</span></div>
+</section>
+
+<!-- ============ P27 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P27</span></div>
+  <div class="slide-body"><p class="msg">社内実行体制</p>
+  <div class="cols-3">
+    <div>
+      <h3><span class="no">01</span>ネタ管理台帳</h3>
+      <p>事業部門から上がる"ネタの種"を一元管理し、優先度づけ・磨き込みを行うパイプラインである。属人化を避け、複数部門から集まる情報を一つの管理単位で扱う。</p>
+    </div>
+    <div>
+      <h3><span class="no">02</span>月次定例のアジェンダ標準化</h3>
+      <div class="chevrons" style="flex-direction:column">
+        <div class="chev on" style="margin-left:0;margin-bottom:5px">①前月の露出モニタリング</div>
+        <div class="chev on" style="margin-left:0;margin-bottom:5px">②今月のピッチ実績レビュー</div>
+        <div class="chev on" style="margin-left:0;margin-bottom:5px">③来月のネタ出し</div>
+        <div class="chev on" style="margin-left:0">④スポークスパーソン準備状況の確認</div>
+      </div>
+    </div>
+    <div>
+      <h3><span class="no">03</span>窓口の一本化</h3>
+      <p>複数部門の発信を、一度すべて通す編集機能を設置する。事業部門から上がる発信案は、必ずこの窓口を経由してから外部に出す運用とし、メッセージの一貫性を担保する。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>28 / 42</span></div>
+</section>
+
+<!-- ============ P28 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P28</span></div>
+  
+  <div class="slide-body"><p class="msg">なぜ外部パートナーとご一緒するか</p>
+  <div class="matrix" style="--mx-cols:2;--mx-label:130px">
+    <div></div>
+    <div class="mx-h">内製（新規採用）</div>
+    <div class="mx-h stage first on">外部リテナー</div>
+    <div class="mx-label alt"><small>比較軸</small>立ち上がり速度</div>
+    <div class="mx-cell">採用・オンボーディングに数ヶ月</div>
+    <div class="mx-cell">初月からPRオーディットを開始可能</div>
+    <div class="mx-label alt"><small>比較軸</small>客観性</div>
+    <div class="mx-cell">社内関係性の中での評価になりやすい</div>
+    <div class="mx-cell">第三者視点での現状評価が可能</div>
+    <div class="mx-label alt"><small>比較軸</small>業界横断知見</div>
+    <div class="mx-cell">自社事例のみに知見が限定されやすい</div>
+    <div class="mx-cell">通信業界・他業界双方の事例を横断的に反映</div>
+    <div class="mx-label alt"><small>比較軸</small>コスト構造</div>
+    <div class="mx-cell">固定人件費・採用コストが継続発生</div>
+    <div class="mx-cell">活動量に応じた変動的な契約設計が可能</div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>29 / 42</span></div>
+</section>
+
+<!-- ============ P29 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 06｜プログラムの作成</span><span class="slide-sub">P29</span></div>
+  <div class="slide-body"><p class="msg">メニュー・体制・価格</p>
+  <div class="chevrons vgap">
+    <div class="chev on">PRオーディット<small>現状の可視化</small></div>
+    <div class="chev on">メディアリレーションズ活動<small>日常の運用実務</small></div>
+    <div class="chev on">月次定例<small>体制の継続改善</small></div>
+  </div>
+  <div class="tbl vgap">
+    <table>
+      <thead><tr><th>プラン</th><th class="num" style="width:150px">月額目安</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>ライトプラン</td><td class="num">120万円</td><td>月次定例＋定点観測リリース設計を中心とした基盤運用</td></tr>
+        <tr class="on"><td><b>推奨プラン</b></td><td class="num"><b>150万円</b></td><td>PRオーディット＋メディアリレーションズ活動＋月次定例のフルセット運用</td></tr>
+        <tr><td>フルサポートプラン</td><td class="num">200万円未満</td><td>推奨プランに加え、プレスツアー企画・メディアトレーニングを内包</td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>30 / 42</span></div>
+</section>
+
+<!-- ============ PART7 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 07</p>
+    <h1>プログラムの実施</h1>
+    <p class="pd-sub">段階的な導入オプションと、実施ロードマップをご提示する。</p>
+    <p class="pd-index">IMPLEMENTATION</p>
+  </div>
+</section>
+
+<!-- ============ P30-P31 統合 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 07｜プログラムの実施</span><span class="slide-sub">P30–P31</span></div>
+  
+  <div class="slide-body"><p class="msg">段階的なご導入オプションと、実施ロードマップ</p>
+  <div class="chevrons">
+    <div class="chev on">PRオーディット（単発の入口）<small>現状把握からスタート</small></div>
+    <div class="chev on">課題の可視化<small>優先順位の共有</small></div>
+    <div class="chev on">月次伴走への移行<small>継続的な運用体制へ</small></div>
+  </div>
+  <p class="vgap">まずは単発のPRオーディットからご検討いただき、可視化された課題をもとに、月次の伴走支援へと段階的に移行いただくことが可能である。以下は移行後6ヶ月間の実施ロードマップである。</p>
+  <div class="roadmap vgap">
+    <div class="rm-row rm-head" style="grid-template-columns:160px repeat(6,1fr)">
+      <div class="rm-lane"></div>
+      <div class="rm-h">初月</div><div class="rm-h">2ヶ月目</div><div class="rm-h">3ヶ月目</div>
+      <div class="rm-h">4ヶ月目</div><div class="rm-h">5ヶ月目</div><div class="rm-h">6ヶ月目</div>
+    </div>
+    <div class="rm-row" style="grid-template-columns:160px repeat(6,1fr)">
+      <div class="rm-lane">PRオーディット・キックオフ</div>
+      <div class="rm-bar on" style="grid-column:2/3">実施</div>
+    </div>
+    <div class="rm-row" style="grid-template-columns:160px repeat(6,1fr)">
+      <div class="rm-lane">年間カレンダー確定</div>
+      <div class="rm-bar" style="grid-column:2/4">確定・運用開始</div>
+      <div class="rm-ms" style="grid-column:3">◆定点観測第1号発行</div>
+    </div>
+    <div class="rm-row" style="grid-template-columns:160px repeat(6,1fr)">
+      <div class="rm-lane">月次定例</div>
+      <div class="rm-bar" style="grid-column:2/8">継続実施</div>
+    </div>
+    <div class="rm-row" style="grid-template-columns:160px repeat(6,1fr)">
+      <div class="rm-lane">KPI計測・反復展開確認</div>
+      <div class="rm-ms" style="grid-column:3">◆初回KPI計測</div>
+      <div class="rm-ms" style="grid-column:6">◆複数番組展開確認</div>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>32 / 42</span></div>
+</section>
+
+<!-- ============ PART8 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 08</p>
+    <h1>分析・評価</h1>
+    <p class="pd-sub">効果を数値で確認するためのKPIを定義する。</p>
+    <p class="pd-index">MEASUREMENT</p>
+  </div>
+</section>
+
+<!-- ============ P32 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 08｜分析・評価</span><span class="slide-sub">P32</span></div>
+  <div class="slide-body"><p class="msg">効果を、感覚ではなく数字で確認しながら進める</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>KPI</th><th class="num" style="width:150px">現状値</th><th class="num" style="width:150px">3ヶ月目標</th><th class="num" style="width:150px">6ヶ月目標</th></tr></thead>
+      <tbody>
+        <tr><td>TV転換率（Web発表比のTV露出比率）</td><td class="num">基準値として記録</td><td class="num">+10%改善</td><td class="num">+20%改善</td></tr>
+        <tr><td>TVポジティブ比率</td><td class="num">27.4%</td><td class="num">30%台</td><td class="num">35%以上</td></tr>
+        <tr><td>反復テーマの継続番組数</td><td class="num">–</td><td class="num">1テーマ確立</td><td class="num">2テーマ確立</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note vgap">四半期ごとにソフトバンク・KDDIとの差分を再計測し、"改善幅"として提示する。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>34 / 42</span></div>
+</section>
+
+<!-- ============ PART9 divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">PART 09</p>
+    <h1>自己修正</h1>
+    <p class="pd-sub">一度きりの提案ではなく、育て続けるパートナーシップとして。</p>
+    <p class="pd-index">SELF-CORRECTION</p>
+  </div>
+</section>
+
+<!-- ============ P33 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 09｜自己修正</span><span class="slide-sub">P33</span></div>
+  <div class="slide-body"><p class="msg">一度きりの提案ではなく、育て続けるパートナーシップを</p>
+  <div class="chevrons vgap">
+    <div class="chev on">実施<small>プログラムの運用</small></div>
+    <div class="chev on">分析・評価<small>KPIによる効果測定</small></div>
+    <div class="chev on">自己修正<small>戦略・ナラティブの見直し</small></div>
+  </div>
+  <p class="vgap" style="text-align:center;color:var(--ink-3);font-size:16px">↺　自己修正の結果は「実施」フェーズへ回帰し、スパイラル的に高度化する</p>
+  <p class="vgap">本モデルは環をなす継続的な活動である。実施→分析評価→自己修正のサイクルを繰り返すことで、一つひとつの取り組みが一過性で終わらず、経営ストーリーとして積み上がっていく。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>36 / 42</span></div>
+</section>
+
+<!-- ============ P34 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Part 09｜自己修正</span><span class="slide-sub">P34</span></div>
+  <div class="slide-body"><p class="msg">一つひとつの挑戦を、"ドコモらしさ"という物語へ</p>
+  <div class="cols-2">
+    <div>
+      <h3>全体ロジックの1枚サマリー</h3>
+      <ul>
+        <li>現状：発信量は業界リード。TV拡大・有事対応に伸びしろ</li>
+        <li>目標：5つの重要領域を一つの経営ストーリーとして束ね、5層のステークホルダーをファン化する</li>
+        <li>戦略：④防災レジリエンスを主力ナラティブに、②AIOWNを次章として育てる</li>
+        <li>プログラム：年間カレンダー・全国紙〜専門媒体までの網羅的なリレーション・月次運用体制</li>
+        <li>評価：TV転換率・ポジティブ比率・継続番組数をKPIとして四半期ごとに計測</li>
+      </ul>
+    </div>
+    <div>
+      <h3>次回討議事項</h3>
+      <p>4つの章（②AIOWN／③金融事業拡大／④防災レジリエンス／⑤ファンダム戦略）のうち、どこから語り始めるか、ご相談させてください。</p>
+      <p class="note">本提案では④防災レジリエンスを起点とすることを推奨しているが、貴社内の優先順位・スポークスパーソンの準備状況等を踏まえ、次回討議にて最終調整させていただく。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>37 / 42</span></div>
+</section>
+
+<!-- ============ APPENDIX divider ============ -->
+<section class="slide divider">
+  <div class="pd-body">
+    <p class="pd-no">APPENDIX</p>
+    <h1>参考：メディアトレーニング</h1>
+    <p class="pd-sub">有事対応力の備えについて、分析手法の補足と参考メニューをご案内する。</p>
+    <p class="pd-index">MEDIA TRAINING REFERENCE</p>
+  </div>
+</section>
+
+<!-- ============ A1 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Appendix｜メディアトレーニング</span><span class="slide-sub">A1</span></div>
+  
+  <div class="slide-body"><p class="msg">分析手法に関する補足</p>
+  <div class="cols-2">
+    <div>
+      <h3><span class="no">01</span>センチメント判定について</h3>
+      <p>本資料のポジティブ比率等は、キーワード自動判定によるセンチメント分析に基づいている。</p>
+      <h3><span class="no">02</span>集計対象の非対称性について</h3>
+      <p>ソフトバンクについては「ソフトバンクホークス」との名称重複があるため、野球関連記事（Web 4,738件／TV 2,641件）を除外して集計している。ドコモ・KDDIには同様の除外操作は行っていない。</p>
+    </div>
+    <div>
+      <h3><span class="no">03</span>データ収集期間の偏りについて</h3>
+      <p>KDDIのWeb/新聞データは、2025年8月がデータ収集期間の関係で少なくなっている。</p>
+      <h3><span class="no">04</span>TVデータのカバレッジについて</h3>
+      <p>TVデータは主要6局を対象としており、それ以外の局・配信サービスでの露出は本分析に含まれていない。</p>
+    </div>
+  </div>
+  <p class="note vgap">分析期間：2025年8月〜2026年8月、対象：NTTドコモ・ソフトバンク・KDDI3社のWeb/新聞・テレビ露出データ（合計約16,000件超）</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>39 / 42</span></div>
+</section>
+
+<!-- ============ A2 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Appendix｜メディアトレーニング</span><span class="slide-sub">A2</span></div>
+  
+  <div class="slide-body"><p class="msg">参考記事一覧</p>
+  <div class="cols-2">
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">k-tai.watch.impress.co.jp</span></div>
+      <div class="qc-body">
+        <p class="qc-media">ケータイWatch</p>
+        <p class="qc-headline">年頭所感2026：NTTドコモ 前田社長</p>
+        <p class="qc-excerpt">前田社長による2026年年頭所感。通信品質改善・防災を含む経営方針を発信。</p>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">group.ntt</span></div>
+      <div class="qc-body">
+        <p class="qc-media">NTTグループ</p>
+        <p class="qc-headline">NTTグループ中期経営戦略（AIOWN）</p>
+        <p class="qc-excerpt">2026年5月更新の中期経営戦略。「AIOWN」を旗印としたグループ最上位の成長戦略を提示。</p>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">itmedia.co.jp</span></div>
+      <div class="qc-body">
+        <p class="qc-media">ITmedia Mobile</p>
+        <p class="qc-headline">前田社長インタビュー：通信品質の現在地</p>
+        <p class="qc-excerpt">通信品質改善の進捗について、前田社長が「道半ば」の詳細を解説したインタビュー記事。</p>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+        <span class="qc-url">k-tai.watch.impress.co.jp</span></div>
+      <div class="qc-body">
+        <p class="qc-media">ケータイWatch</p>
+        <p class="qc-headline">前田社長インタビュー：ファンダム戦略</p>
+        <p class="qc-excerpt">「通信品質の今」と新料金プランで打ち出す"ファンダム戦略"についてのインタビュー前編。</p>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>40 / 42</span></div>
+</section>
+
+<!-- ============ A3-A4 統合 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Appendix｜メディアトレーニング</span><span class="slide-sub">A3–A4</span></div>
+  
+  <div class="slide-body"><p class="msg">メディア対応力についての考え方と、参考となる事例</p>
+  <div class="cols-2">
+    <div>
+      <h3><span class="no">01</span>仮説</h3>
+      <p>対応力の差は資質ではなく、準備の差によって生まれるものと考えられる。日頃からの発信の積み重ねと想定問答の準備が、有事における対応力の土台になる。</p>
+      <div class="quote-card vgap">
+        <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+          <span class="qc-url">president.jp</span></div>
+        <div class="qc-body">
+          <p class="qc-media">PRESIDENT Online</p>
+          <p class="qc-headline">なぜ日本の大企業はKDDIのような記者会見ができないのか</p>
+          <p class="qc-excerpt">「社長個人の能力の優劣ではない」本当の理由を論じた記事。対応力の差を構造的な準備の問題として整理している。</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3><span class="no">02</span>参考となる事例</h3>
+      <div class="quote-card">
+        <div class="qc-bar"><span class="qc-dot"></span><span class="qc-dot"></span><span class="qc-dot"></span>
+          <span class="qc-url">k-tai.watch.impress.co.jp</span></div>
+        <div class="qc-body">
+          <p class="qc-media">ケータイWatch</p>
+          <p class="qc-headline">「au通信障害」KDDI髙橋社長の会見質疑詳報、なにが起きたのか</p>
+          <p class="qc-excerpt">技術的な質問にも自身の言葉で回答し、専門家から高く評価された会見対応の詳報記事。</p>
+        </div>
+      </div>
+      <h3 class="vgap">示唆</h3>
+      <p>技術的に専門性の高い質問に対しても、経営トップ自身の言葉で説明できる状態は、平時からの準備の蓄積によって実現する。本提案における月次運用（P19・P25）は、この準備を仕組み化するものである。</p>
+    </div>
+  </div>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>41 / 42</span></div>
+</section>
+
+<!-- ============ A5 ============ -->
+<section class="slide">
+  <div class="slide-head"><span class="slide-part">Appendix｜メディアトレーニング</span><span class="slide-sub">A5</span></div>
+  <div class="slide-body"><p class="msg">メディアトレーニング メニュー詳細</p>
+  <div class="tbl">
+    <table>
+      <thead><tr><th style="width:170px">項目</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>対象</td><td>役員・スポークスパーソン向け／広報担当者向けセミナー</td></tr>
+        <tr><td>内容</td><td>想定問答の準備、模擬会見、危機対応シミュレーションを含む実践的トレーニング</td></tr>
+        <tr><td>進め方</td><td>事前ヒアリング→シナリオ設計→模擬実施→フィードバック、の4ステップ</td></tr>
+        <tr><td>リテナー月次定例への統合オプション</td><td>四半期ごとの想定問答更新（P26）と連動し、月次定例の中で継続的に実施可能</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note vgap">ご検討にあたっては、P29「メニュー・体制・価格」のフルサポートプランへの内包、または単体メニューとしてのご依頼のいずれも承る。</p>
+  </div>
+  <div class="slide-foot"><span>攻めのPRを実現する、広報体制の基盤アップデート</span><span>42 / 42</span></div>
+</section>
+
+</div>
+</body>
+</html>
